@@ -1,0 +1,17 @@
+{
+	"compilerOptions": {
+		"target": "es2016",
+		"module": "ESNext",
+		"moduleResolution": "node",
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"jsx": "react-jsx",
+		"strict": true,
+		"skipLibCheck": true,
+		"rootDir": "./src",
+		"outDir": "./dist",
+		"lib": ["DOM","ESNext"]
+	},
+	"include": ["./src/**/*.ts","./src/**/*.tsx","./assets/*"],
+	"exclude": ["./node_modules"]
+}
