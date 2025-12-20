@@ -1,10 +1,16 @@
+import React from 'react';
 import { createRoot } from 'react-dom/client';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import App from './App';
+import { ChakraProvider, defaultSystem } from '@chakra-ui/react';
 
-const el = document.querySelector("#root");
-if(el === null) {
-	console.error("Failed to find container with id root");
-} else {
-	const root = createRoot(el);
-	root.render(<App/>);
-}
+// const queryClient = new QueryClient();
+
+const el = document.getElementById("root");
+if (!el) throw new Error("Failed to find element with id root");
+
+createRoot(el).render(
+	<ChakraProvider value={defaultSystem}>
+		<App/>
+	</ChakraProvider>
+);
