@@ -18,7 +18,8 @@ exports.runDevServer = () => ({
 	plugins: [
 		new WebpackPluginServe({
 			port: PORT,
-			static: path.join(__dirname,'dist')
+			static: path.join(__dirname,'dist'),
+			host: '0.0.0.0'
 		})
 	]
 });

@@ -29,7 +29,13 @@
     "webpack-plugin-serve": "^1.6.0"
   },
   "dependencies": {
+    "@chakra-ui/provider": "^2.4.2",
+    "@chakra-ui/react": "^3.30.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@tanstack/react-query": "^5.90.12",
     "dotenv": "^17.2.3",
+    "framer-motion": "^12.23.26",
     "react": "^19.2.3",
     "react-dom": "^19.2.3"
   }
