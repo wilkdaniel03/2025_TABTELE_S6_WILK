@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-	  "dev": "MODE=dev webpack-cli",
-	  "build": "webpack-cli"
+    "dev": "webpack-cli"
   },
   "keywords": [],
   "author": "",
@@ -30,6 +29,7 @@
     "webpack-plugin-serve": "^1.6.0"
   },
   "dependencies": {
+    "dotenv": "^17.2.3",
     "react": "^19.2.3",
     "react-dom": "^19.2.3"
   }
