@@ -28,27 +28,33 @@
 
         th, td {
             border: 1px solid #ccc;
-            padding: 8px 12px;
+            padding: 12px 12px;
+            height: 40px;
             text-align: left;
         }
 
         th {
             background: #eee;
         }
+
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
     </style>
 </head>
 <body>
 
-    <h1>Private Container Registry � Admin UI</h1>
+    <h1>Private Container Registry – Admin UI</h1>
 
     <label for="repoSelect"><strong>Repository:</strong></label><br>
     <select id="repoSelect">
         <option value="">-- select repository --</option>
     </select>
 
-    <table id="tagsTable" style="display:none">
+    <table id="tagsTable">
         <thead>
             <tr>
+                <th>Repository</th>
                 <th>Tag</th>
             </tr>
         </thead>
@@ -57,43 +63,68 @@
 
     <script>
         const REGISTRY = "http://51.68.145.72:5000";
+        const MIN_ROWS = 5;
 
         async function loadRepositories() {
             const select = document.getElementById("repoSelect");
+            try {
+                const res = await fetch(`${REGISTRY}/v2/_catalog`);
+                const data = await res.json();
+                (data.repositories || []).forEach(repo => {
+                    const opt = document.createElement("option");
+                    opt.value = repo;
+                    opt.textContent = repo;
+                    select.appendChild(opt);
+                });
+            } catch (err) {
+                console.warn("Nie udało się pobrać listy repozytoriów:", err);
+            }
+        }
 
-            const res = await fetch(`${REGISTRY}/v2/_catalog`);
-            const data = await res.json();
-
-            data.repositories.forEach(repo => {
-                const opt = document.createElement("option");
-                opt.value = repo;
-                opt.textContent = repo;
-                select.appendChild(opt);
-            });
+        function createEmptyRows(tbody, count) {
+            for (let i = 0; i < count; i++) {
+                const tr = document.createElement("tr");
+                const tdRepo = document.createElement("td");
+                tdRepo.textContent = "";
+                tr.appendChild(tdRepo);
+                const tdTag = document.createElement("td");
+                tdTag.textContent = "";
+                tr.appendChild(tdTag);
+                tbody.appendChild(tr);
+            }
         }
 
         async function loadTags(repo) {
             const table = document.getElementById("tagsTable");
             const tbody = table.querySelector("tbody");
             tbody.innerHTML = "";
+            createEmptyRows(tbody, MIN_ROWS);
 
-            if (!repo) {
-                table.style.display = "none";
-                return;
+            if (!repo) return;
+
+            try {
+                const res = await fetch(`${REGISTRY}/v2/${repo}/tags/list`);
+                const data = await res.json();
+                const tags = data.tags || [];
+
+                tags.forEach((tag, index) => {
+                    let tr;
+                    if (index < tbody.rows.length) {
+                        tr = tbody.rows[index];
+                    } else {
+                        tr = document.createElement("tr");
+                        const tdRepo = document.createElement("td");
+                        tr.appendChild(tdRepo);
+                        const tdTag = document.createElement("td");
+                        tr.appendChild(tdTag);
+                        tbody.appendChild(tr);
+                    }
+                    tr.cells[0].textContent = repo;
+                    tr.cells[1].textContent = tag;
+                });
+            } catch (err) {
+                console.warn("Nie udało się pobrać tagów:", err);
             }
-
-            const res = await fetch(`${REGISTRY}/v2/${repo}/tags/list`);
-            const data = await res.json();
-
-            (data.tags || []).forEach(tag => {
-                const tr = document.createElement("tr");
-                const td = document.createElement("td");
-                td.textContent = tag;
-                tr.appendChild(td);
-                tbody.appendChild(tr);
-            });
-
-            table.style.display = "table";
         }
 
         document.getElementById("repoSelect").addEventListener("change", e => {
@@ -101,6 +132,8 @@
         });
 
         loadRepositories();
+        const tbody = document.getElementById("tagsTable").querySelector("tbody");
+        createEmptyRows(tbody, MIN_ROWS);
     </script>
 
 </body>
