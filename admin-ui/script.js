@@ -51,6 +51,10 @@ selectEl.addEventListener('change',(e) => {
 });
 
 const setupDefaultTable = (defaultRepo) => {
+	const oldTrs = document.querySelectorAll('table#tagsTable tbody tr');
+	for(let v of oldTrs) {
+		tbodyEl.removeChild(v);
+	}
 	tags[defaultRepo].forEach(el => {
 		const newTrEl = document.createElement('tr');
 		const newTdEl = [document.createElement('td'),document.createElement('td')];
