@@ -17,6 +17,7 @@ const tbodyEl = document.querySelector('table#tagsTable tbody');
 const tags = new Object();
 
 fetchRepos().then(data => {
+	let defaultRepo = data['repositories'][0];
 	for(let v of data['repositories']) {
 		const newOptEl = document.createElement('option');
 		newOptEl.setAttribute("value",v);
@@ -27,6 +28,7 @@ fetchRepos().then(data => {
 			for(let i = 0; i < item['tags'].length; i++) {
 				tags[v].push(parseFloat(item['tags'][i]));
 			}
+			setupDefaultTable(defaultRepo);
 		});
 	}
 });
@@ -47,3 +49,16 @@ selectEl.addEventListener('change',(e) => {
 		tbodyEl.appendChild(newTrEl);
 	});
 });
+
+const setupDefaultTable = (defaultRepo) => {
+	tags[defaultRepo].forEach(el => {
+		const newTrEl = document.createElement('tr');
+		const newTdEl = [document.createElement('td'),document.createElement('td')];
+		newTdEl[0].textContent = defaultRepo;
+		newTdEl[1].textContent = el;
+		newTdEl.forEach(val => {
+			newTrEl.appendChild(val);
+		});
+		tbodyEl.appendChild(newTrEl);
+	});
+};
