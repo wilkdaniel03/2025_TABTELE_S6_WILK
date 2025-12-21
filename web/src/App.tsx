@@ -1,4 +1,4 @@
-import LoginScreen from "./pages/LoginScreen";
+import LoginScreen from "./LoginScreen";
 
 const App = () => {
     return <LoginScreen />;
