@@ -11,7 +11,6 @@
 
     <label for="repoSelect"><strong>Repository:</strong></label><br>
     <select id="repoSelect">
-        <option value="">-- select repository --</option>
     </select>
 
     <table id="tagsTable">
@@ -24,80 +23,6 @@
         <tbody></tbody>
     </table>
 
-    <script>
-        const REGISTRY = "http://51.68.145.72:5000";
-        const MIN_ROWS = 5;
-
-        async function loadRepositories() {
-            const select = document.getElementById("repoSelect");
-            try {
-                const res = await fetch(`${REGISTRY}/v2/_catalog`);
-                const data = await res.json();
-                (data.repositories || []).forEach(repo => {
-                    const opt = document.createElement("option");
-                    opt.value = repo;
-                    opt.textContent = repo;
-                    select.appendChild(opt);
-                });
-            } catch (err) {
-                console.warn("Nie udało się pobrać listy repozytoriów:", err);
-            }
-        }
-
-        function createEmptyRows(tbody, count) {
-            for (let i = 0; i < count; i++) {
-                const tr = document.createElement("tr");
-                const tdRepo = document.createElement("td");
-                tdRepo.textContent = "";
-                tr.appendChild(tdRepo);
-                const tdTag = document.createElement("td");
-                tdTag.textContent = "";
-                tr.appendChild(tdTag);
-                tbody.appendChild(tr);
-            }
-        }
-
-        async function loadTags(repo) {
-            const table = document.getElementById("tagsTable");
-            const tbody = table.querySelector("tbody");
-            tbody.innerHTML = "";
-            createEmptyRows(tbody, MIN_ROWS);
-
-            if (!repo) return;
-
-            try {
-                const res = await fetch(`${REGISTRY}/v2/${repo}/tags/list`);
-                const data = await res.json();
-                const tags = data.tags || [];
-
-                tags.forEach((tag, index) => {
-                    let tr;
-                    if (index < tbody.rows.length) {
-                        tr = tbody.rows[index];
-                    } else {
-                        tr = document.createElement("tr");
-                        const tdRepo = document.createElement("td");
-                        tr.appendChild(tdRepo);
-                        const tdTag = document.createElement("td");
-                        tr.appendChild(tdTag);
-                        tbody.appendChild(tr);
-                    }
-                    tr.cells[0].textContent = repo;
-                    tr.cells[1].textContent = tag;
-                });
-            } catch (err) {
-                console.warn("Nie udało się pobrać tagów:", err);
-            }
-        }
-
-        document.getElementById("repoSelect").addEventListener("change", e => {
-            loadTags(e.target.value);
-        });
-
-        loadRepositories();
-        const tbody = document.getElementById("tagsTable").querySelector("tbody");
-        createEmptyRows(tbody, MIN_ROWS);
-    </script>
-
+	<script src="./script.js"></script>
 </body>
 </html>
