@@ -10,7 +10,7 @@
 		"skipLibCheck": true,
 		"rootDir": "./src",
 		"outDir": "./dist",
-		"lib": ["DOM","ESNext"]
+		"lib": [ "DOM", "ESNext" ]
 	},
 	"include": ["./src/**/*.ts","./src/**/*.tsx","./assets/*"],
 	"exclude": ["./node_modules"]
