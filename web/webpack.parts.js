@@ -19,7 +19,8 @@ exports.runDevServer = () => ({
 		new WebpackPluginServe({
 			port: PORT,
 			static: path.join(__dirname,'dist'),
-			host: '0.0.0.0'
+			host: '0.0.0.0',
+			historyFallback: true
 		})
 	]
 });

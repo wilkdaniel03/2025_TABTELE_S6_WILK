@@ -13,23 +13,25 @@ const AuthLayout = ({ title, subtitle, children }: Props) => {
     return (
         <Box
             minH="100vh"
-            bg={isDesktop ? "gray.900" : "white"}
+            bg={{ base: "white", md: "gray.900" }}
             display="flex"
             alignItems="center"
             justifyContent="center"
-            px={{ base: 4, md: 0 }}
+            px={{ base: 4, md: 6 }}
+            py={{ base: 0, md: 10 }}
         >
             <Box
                 w="100%"
                 maxW={{ base: "100%", md: "430px" }}
                 bg="white"
-                borderRadius={{ base: "none", md: "2xl" }}
+                borderRadius={{ base: "0", md: "2xl" }}
                 boxShadow={{ base: "none", md: "2xl" }}
+                overflow="hidden"
             >
                 <Container py={10}>
                     <Stack>
                         <Stack textAlign="center">
-                            <Heading fontSize={{ base: "20px", md: "22px" }}>
+                            <Heading fontWeight="600" fontSize="22px">
                                 {title}
                             </Heading>
                             <Text fontSize="14px" color="gray.600">
