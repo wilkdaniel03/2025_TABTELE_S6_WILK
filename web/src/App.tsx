@@ -1,5 +1,5 @@
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Navigate, Routes, Route } from "react-router-dom";
 
 import Login from "./pages/auth/LoginScreen";
 import Register from "./pages/auth/Register";
@@ -25,7 +25,9 @@ function App() {
                     <Route path="/dashboard/vehicles" element={<Vehicles />} />
                     <Route path="/dashboard/notifications" element={<Notifications />} />
 
-                    <Route path="*" element={<Login />} />
+                    <Route path="/dashboard/*" element={<Navigate to="/dashboard/reservations" replace={true}/>} />
+                    <Route path="/auth/*" element={<Navigate to="/auth/login" replace={true}/>} />
+                    <Route path="/*" element={<Navigate to="/auth/login" replace={true}/>} />
                 </Routes>
             </Router>
         </ChakraProvider>

@@ -21,7 +21,7 @@ export default function ForgotPassword() {
                 </Button>
 
                 <Button h="48px" bg="#0B84FF" color="white" _hover={{ bg: "#0A76E6" }}>
-                    <Link to="/auth/Register" style={{ width: "100%", display: "block", textAlign: "center", color: "white" }}>
+                    <Link to="/auth/register" style={{ width: "100%", display: "block", textAlign: "center", color: "white" }}>
                         Create new account
                     </Link>
                 </Button>
