@@ -1,0 +1,24 @@
+name: Auth service deployment
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - shell: bash
+        env:
+          REGISTRY_ADDR: ${{ secrets.REGISTRY_ADDR }}
+          RUNNER_ALLOW_RUNASROOT: '1'
+        run: |
+          export AUTH_VERSION=$(cat versions.json | jq .auth | tr -d '\"')
+          printf '{ "insecure-registries": [ "%s" ] }' $REGISTRY_ADDR > $PWD/daemon.json
+          sudo cp $PWD/daemon.json /etc/docker/daemon.json
+          sudo systemctl restart docker
+          cd auth
+          docker build -t $REGISTRY_ADDR/frontend:$AUTH_VERSION .
+          docker push $REGISTRY_ADDR/frontend:$AUTH_VERSION

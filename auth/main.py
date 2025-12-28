@@ -52,4 +52,4 @@ if __name__ == "__main__":
     if PORT is None:
         raise ValueError("Failed to parse PORT env")
     secret = load_secret("secret")
-    uvicorn.run("main:app",port=int(PORT))
+    uvicorn.run("main:app",port=int(PORT),host="0.0.0.0")
