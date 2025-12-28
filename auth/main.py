@@ -5,6 +5,7 @@ import base64
 import time
 from typing import Annotated, Dict
 import os
+from dataclasses import dataclass
 
 secret = bytes(32)
 app = FastAPI()
@@ -17,8 +18,15 @@ user_id: int = 1203129321
 # Two hours
 expiration_time: int = 3600 * 2
 
-@app.get("/token")
-def get_token():
+@dataclass
+class UserLoginDto:
+    username: str
+    password: str
+
+@app.post("/token")
+def get_token(body: UserLoginDto):
+    if body.username != "John" or body.password != "doe":
+        raise HTTPException(404,"Failed to find user with provided username and passowrd")
     now = time.time()
     payload = { "iss": user_id, "sub": "Daniel Wilk", "iat": now, "exp": now + expiration_time }
     token = jwt.encode(payload,secret,algorithm)

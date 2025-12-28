@@ -12,8 +12,19 @@ docker build --build-arg VERSION=$(cat pyproject.toml | awk '/^version/ { print 
 ```
 
 ### HTTP Format
-*GET /token*
+*POST /token*
 ```bash
+Request:
+
+Body:
+{
+    username: str
+    password: str
+}
+
+Response
+
+Body:
 {
     token: str
 }
@@ -21,6 +32,16 @@ docker build --build-arg VERSION=$(cat pyproject.toml | awk '/^version/ { print 
 
 *GET /authorize*
 ```bash
+Request:
+
+Headers:
+{
+    Authorization: Bearer <token>
+}
+
+Response:
+
+Body:
 {
     status: int 
 }
