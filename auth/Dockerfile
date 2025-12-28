@@ -1,8 +1,20 @@
-ARG VERSION
-
 FROM astral/uv:python3.13-alpine AS UV
 WORKDIR /app
 ADD ./* ./
 RUN uv sync
 RUN uv build
-RUN echo "$VERSION"
+
+FROM python:3.13.11-alpine
+ARG VERSION
+RUN apk add openssl
+WORKDIR /app
+COPY --from=UV /app/dist/auth-$VERSION.tar.gz ./app.tar.gz
+RUN tar -xvf ./app.tar.gz
+WORKDIR /app/auth-$VERSION
+RUN printf 'from setuptools import setup\nsetup()\n' > setup.py
+RUN python3 -m venv .venv
+RUN .venv/bin/pip3 install setuptools
+RUN .venv/bin/pip3 install .
+RUN openssl rand -base64 -out secret 32
+
+CMD [".venv/bin/python3","main.py"]
