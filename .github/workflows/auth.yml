@@ -20,5 +20,5 @@ jobs:
           sudo cp $PWD/daemon.json /etc/docker/daemon.json
           sudo systemctl restart docker
           cd auth
-          docker build -t $REGISTRY_ADDR/frontend:$AUTH_VERSION .
-          docker push $REGISTRY_ADDR/frontend:$AUTH_VERSION
+          docker build --build-arg VERSION=$(cat pyproject.toml | awk '/^version/ { print $3 }' | tr -d '\"') -t $REGISTRY_ADDR/auth:$AUTH_VERSION .
+          docker push $REGISTRY_ADDR/auth:$AUTH_VERSION
