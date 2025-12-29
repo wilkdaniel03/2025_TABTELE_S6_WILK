@@ -1,6 +1,8 @@
 FROM astral/uv:python3.13-alpine AS UV
 WORKDIR /app
-ADD ./* ./
+ADD .python-version *csv pyproject.toml ./
+ADD src ./src/
+RUN ls
 RUN uv sync
 RUN uv build
 
