@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Header, HTTPException
 import sqlalchemy
+from sqlalchemy import insert
 import uvicorn
 import jwt
 import base64
@@ -9,6 +10,7 @@ import os
 from dataclasses import dataclass
 import connection
 import models
+import loader
 
 secret = bytes(32)
 app = FastAPI()
@@ -58,8 +60,12 @@ def load_secret(path: str) -> bytes:
         return secret
 
 if __name__ == "__main__":
-    engine = sqlalchemy.create_engine(connection.get_db_url())
+    engine = sqlalchemy.create_engine(connection.get_db_url(),echo=True)
     models.init_db(engine)
+    with engine.connect() as conn:
+        person_data = loader.load_csv("person.csv")
+        conn.execute(insert(models.Person).values(person_data))
+        conn.commit()
     os.environ.setdefault("PORT","8080")
     PORT = os.environ.get("PORT")
     if PORT is None:
