@@ -49,6 +49,8 @@ Body:
 
 *ERROR*
 ```bash
+body:
+
 {
     detail: str
 }
