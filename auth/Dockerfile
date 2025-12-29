@@ -21,4 +21,4 @@ RUN .venv/bin/pip3 install setuptools
 RUN .venv/bin/pip3 install .
 RUN openssl rand -base64 -out secret 32
 
-CMD [".venv/bin/python3","main.py"]
+CMD [".venv/bin/python3","./src/main.py"]
