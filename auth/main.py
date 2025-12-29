@@ -65,6 +65,8 @@ if __name__ == "__main__":
     with engine.connect() as conn:
         person_data = loader.load_csv("person.csv")
         conn.execute(insert(models.Person).values(person_data))
+        user_data = loader.load_csv("user.csv")
+        conn.execute(insert(models.User).values(user_data))
         conn.commit()
     os.environ.setdefault("PORT","8080")
     PORT = os.environ.get("PORT")

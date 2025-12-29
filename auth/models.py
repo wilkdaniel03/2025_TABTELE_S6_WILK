@@ -1,7 +1,7 @@
 from sqlalchemy import Column, String, Integer, Date, DateTime, Engine, MetaData, Boolean, ForeignKey
 from sqlalchemy.orm import registry
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, datetime
 
 
 metadata = MetaData()
@@ -37,9 +37,30 @@ class User(Base):
     username = Column(String(50),nullable=False)
     password = Column(String(50),nullable=False)
     last_login = Column(DateTime,nullable=False)
-    activity = Column(Boolean,nullable=False)
+    is_active = Column(Boolean,nullable=False)
     is_admin = Column(Boolean,default=False,nullable=False)
     person_id = Column(Integer,ForeignKey("person.person_id",onupdate="CASCADE",ondelete="RESTRICT"),unique=True,nullable=False)
+
+
+def str_to_bool(input: str) -> bool:
+    if input.lower() or input == '1':
+        return True
+    else:
+        return False
+
+
+@dataclass
+class UserDto:
+    username: str
+    password: str
+    last_login: datetime
+    is_active: bool
+    is_admin: bool
+    person_id: int
+
+    @classmethod
+    def from_str(cls,username:str,password:str,last_login:datetime,is_active:str,is_admin:str,person_id:int):
+        return cls(username,password,last_login,str_to_bool(is_active),str_to_bool(is_admin),person_id)
 
 
 def init_db(engine: Engine) -> None:
