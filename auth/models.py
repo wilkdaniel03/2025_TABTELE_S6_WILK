@@ -1,5 +1,7 @@
-from sqlalchemy import Column, String, Integer, DateTime, Engine, MetaData, Boolean, ForeignKey
+from sqlalchemy import Column, String, Integer, Date, DateTime, Engine, MetaData, Boolean, ForeignKey
 from sqlalchemy.orm import registry
+from dataclasses import dataclass
+from datetime import date
 
 
 metadata = MetaData()
@@ -12,10 +14,20 @@ class Person(Base):
     person_id = Column(Integer,primary_key=True,unique=True,nullable=False)
     name = Column(String(50),nullable=False)
     surname = Column(String(50),nullable=False)
-    date_of_birth = Column(DateTime,nullable=False)
-    phone_number = Column(Integer,unique=True,nullable=False)
-    pesel = Column(Integer,unique=True,nullable=False)
-    nationality = Column(String(50),default="Polish",nullable=True)
+    date_of_birth = Column(Date,nullable=False)
+    phone_number = Column(String(9),unique=True,nullable=False)
+    pesel = Column(String(11),unique=True,nullable=False)
+    nationality = Column(String(50),default="Polish",nullable=False)
+
+
+@dataclass
+class PersonDto:
+    name: str
+    surname: str
+    date_of_birth: date
+    phone_number: str
+    pesel: str
+    nationality: str
 
 
 class User(Base):
