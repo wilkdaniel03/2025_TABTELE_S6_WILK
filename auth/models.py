@@ -26,6 +26,7 @@ class User(Base):
     password = Column(String(50),nullable=False)
     last_login = Column(DateTime,nullable=False)
     activity = Column(Boolean,nullable=False)
+    is_admin = Column(Boolean,default=False,nullable=False)
     person_id = Column(Integer,ForeignKey("person.person_id",onupdate="CASCADE",ondelete="RESTRICT"),unique=True,nullable=False)
 
 

@@ -1,6 +1,7 @@
 import os
 import sqlalchemy
 
+
 def get_db_url() -> sqlalchemy.URL:
     host = os.environ.get("DB_HOST")
     user = os.environ.get("DB_USER")

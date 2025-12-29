@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Header, HTTPException
+import sqlalchemy
 import uvicorn
 import jwt
 import base64
@@ -6,6 +7,8 @@ import time
 from typing import Annotated, Dict
 import os
 from dataclasses import dataclass
+import connection
+import models
 
 secret = bytes(32)
 app = FastAPI()
@@ -55,6 +58,8 @@ def load_secret(path: str) -> bytes:
         return secret
 
 if __name__ == "__main__":
+    engine = sqlalchemy.create_engine(connection.get_db_url())
+    models.init_db(engine)
     os.environ.setdefault("PORT","8080")
     PORT = os.environ.get("PORT")
     if PORT is None:
