@@ -18,3 +18,6 @@ def get_db_url() -> sqlalchemy.URL:
         port = int(port)
 
     return sqlalchemy.URL.create("mysql+pymysql",user,password,host,port,dbname)
+
+
+ENGINE = sqlalchemy.create_engine(get_db_url(),echo=True)

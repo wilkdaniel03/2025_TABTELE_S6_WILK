@@ -60,9 +60,8 @@ def load_secret(path: str) -> bytes:
         return secret
 
 if __name__ == "__main__":
-    engine = sqlalchemy.create_engine(connection.get_db_url(),echo=True)
-    models.init_db(engine)
-    with engine.connect() as conn:
+    models.init_db(connection.ENGINE)
+    with connection.ENGINE.connect() as conn:
         user_data = loader.load_csv("user.csv")
         conn.execute(insert(models.User).values(user_data))
         person_data = loader.load_csv("person.csv")
