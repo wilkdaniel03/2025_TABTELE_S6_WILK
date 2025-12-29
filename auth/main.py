@@ -1,4 +1,6 @@
 from fastapi import FastAPI, Header, HTTPException
+import sqlalchemy
+from sqlalchemy import insert, select, func
 import uvicorn
 import jwt
 import base64
@@ -6,6 +8,9 @@ import time
 from typing import Annotated, Dict
 import os
 from dataclasses import dataclass
+import connection
+import models
+import loader
 
 secret = bytes(32)
 app = FastAPI()
@@ -25,13 +30,24 @@ class UserLoginDto:
 
 @app.post("/token")
 def get_token(body: UserLoginDto):
-    if body.username != "John" or body.password != "doe":
-        raise HTTPException(404,"Failed to find user with provided username and passowrd")
-    now = time.time()
-    payload = { "iss": user_id, "sub": "Daniel Wilk", "iat": now, "exp": now + expiration_time }
-    token = jwt.encode(payload,secret,algorithm)
-    token_store[user_id] = token
-    return { "token": token }
+    with connection.ENGINE.connect() as conn:
+        sel = select(models.User.user_id,models.User.username).select_from(models.Person).join(models.User).where(sqlalchemy.and_(models.User.username == body.username,models.User.password == body.password))
+        res = conn.execute(sel).fetchone()
+        found = False
+        found_user_id = 0
+        found_username = ''
+        if res is not None:
+            found = True
+            found_user_id = res[0]
+            found_username = res[1]
+
+        if not found:
+            raise HTTPException(404,"Failed to find user with provided username and passowrd")
+        now = time.time()
+        payload = { "iss": found_user_id, "sub": found_username, "iat": now, "exp": now + expiration_time }
+        token = jwt.encode(payload,secret,algorithm)
+        token_store[user_id] = token
+        return { "token": token }
 
 @app.get("/authorize")
 def get_authorize(authorization: Annotated[str | None, Header()]):
@@ -55,6 +71,13 @@ def load_secret(path: str) -> bytes:
         return secret
 
 if __name__ == "__main__":
+    models.init_db(connection.ENGINE)
+    with connection.ENGINE.connect() as conn:
+        user_data = loader.load_csv("user.csv")
+        conn.execute(insert(models.User).values(user_data))
+        person_data = loader.load_csv("person.csv")
+        conn.execute(insert(models.Person).values(person_data))
+        conn.commit()
     os.environ.setdefault("PORT","8080")
     PORT = os.environ.get("PORT")
     if PORT is None:

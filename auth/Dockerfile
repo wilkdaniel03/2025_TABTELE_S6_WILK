@@ -6,6 +6,10 @@ RUN uv build
 
 FROM python:3.13.11-alpine
 ARG VERSION
+ARG DB_HOST
+ARG DB_USER
+ARG DB_PASS
+ARG DB_DBNAME
 RUN apk add openssl
 WORKDIR /app
 COPY --from=UV /app/dist/auth-$VERSION.tar.gz ./app.tar.gz
