@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "webpack-cli",
-	"e2e": "playwright test",
-	"test": "webpack-cli & playwright test"
+	"e2e": "playwright test"
   },
   "keywords": [],
   "author": "",

@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
 
-npm run test
+npm run dev &
+npm run e2e
+CODE=${?}
 sudo killall webpack
+exit $CODE
