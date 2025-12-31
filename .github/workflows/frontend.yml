@@ -5,7 +5,8 @@ on:
     branches:
       - master
     paths:
-      - web/**/*
+      - '.github/workflows/frontend.yml'
+      - 'web/**/*'
 
 jobs:
   build:
@@ -22,5 +23,7 @@ jobs:
           sudo cp $PWD/daemon.json /etc/docker/daemon.json
           sudo systemctl restart docker
           cd web
+          npm run install
+          ./test
           docker build -t $REGISTRY_ADDR/frontend:$FRONTEND_VERSION .
           docker push $REGISTRY_ADDR/frontend:$FRONTEND_VERSION
