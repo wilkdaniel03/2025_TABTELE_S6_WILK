@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack-cli"
+    "dev": "webpack-cli",
+	"e2e": "playwright test --ui-host=0.0.0.0"
   },
   "keywords": [],
   "author": "",
@@ -36,6 +37,7 @@
     "@tanstack/react-query": "^5.90.12",
     "dotenv": "^17.2.3",
     "framer-motion": "^12.23.26",
+    "playwright": "^1.57.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-router-dom": "^7.11.0"
