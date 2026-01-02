@@ -71,6 +71,16 @@ def get_authorize(authorization: Annotated[str | None, Header()]):
     return { "status": 200 }
 
 
+@app.get("/role/{user_id}")
+def get_user_role(user_id: int):
+    with connection.ENGINE.connect() as conn:
+        sel = select(models.Role.name).where(models.Role.user_id == user_id)
+        res = conn.execute(sel).fetchone()
+        if res is None:
+            raise HTTPException(404,"failed to find role for user id {}".format(user_id))
+        return { "role": res[0] }
+
+
 def load_secret(path: str) -> bytes:
     with open(path,"r") as file:
         data = file.read()
