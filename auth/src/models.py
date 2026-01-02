@@ -16,7 +16,6 @@ class User(Base):
     password = Column(String(50),nullable=False)
     last_login = Column(DateTime,nullable=False)
     is_active = Column(Boolean,nullable=False)
-    is_admin = Column(Boolean,default=False,nullable=False)
 
 
 def str_to_bool(input: str) -> bool:
@@ -32,11 +31,11 @@ class UserDto:
     password: str
     last_login: datetime
     is_active: bool
-    is_admin: bool
 
     @classmethod
     def from_str(cls,username:str,password:str,last_login:datetime,is_active:str,is_admin:str):
-        return cls(username,password,last_login,str_to_bool(is_active),str_to_bool(is_admin))
+        # is_admin field not used in the db schema anymore
+        return cls(username,password,last_login,str_to_bool(is_active))
 
 
 class Person(Base):
