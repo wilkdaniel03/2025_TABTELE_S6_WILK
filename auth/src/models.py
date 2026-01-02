@@ -11,7 +11,7 @@ Base = registry(metadata=metadata).generate_base()
 class User(Base):
     __tablename__ = "user"
 
-    user_id = Column(Integer,primary_key=True,unique=True,nullable=False)
+    user_id = Column(Integer,primary_key=True,autoincrement=True,nullable=False)
     username = Column(String(50),nullable=False)
     password = Column(String(50),nullable=False)
     last_login = Column(DateTime,nullable=False)
@@ -42,7 +42,7 @@ class UserDto:
 class Person(Base):
     __tablename__ = "person"
 
-    person_id = Column(Integer,primary_key=True,unique=True,nullable=False)
+    person_id = Column(Integer,primary_key=True,autoincrement=True,nullable=False)
     name = Column(String(50),nullable=False)
     surname = Column(String(50),nullable=False)
     date_of_birth = Column(Date,nullable=False)
@@ -60,6 +60,20 @@ class PersonDto:
     phone_number: str
     pesel: str
     nationality: str
+    user_id: int
+
+
+class Role(Base):
+    __tablename__ = "role"
+
+    role_id = Column(Integer,primary_key=True,autoincrement=True,nullable=False)
+    name = Column(String(50),nullable=False)
+    user_id = Column(Integer,ForeignKey(User.user_id,onupdate="CASCADE",ondelete="CASCADE"),unique=True,nullable=False)
+
+
+@dataclass
+class RoleDto:
+    name: str
     user_id: int
 
 

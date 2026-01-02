@@ -12,21 +12,26 @@ import connection
 import models
 import loader
 
+
 secret = bytes(32)
 app = FastAPI()
 algorithm = "HS256"
 token_store: Dict[int,str] = dict()
 
+
 # Hard coded user id
 user_id: int = 1203129321
 
+
 # Two hours
 expiration_time: int = 3600 * 2
+
 
 @dataclass
 class UserLoginDto:
     username: str
     password: str
+
 
 @app.post("/token")
 def get_token(body: UserLoginDto):
@@ -49,6 +54,7 @@ def get_token(body: UserLoginDto):
         token_store[user_id] = token
         return { "token": token }
 
+
 @app.get("/authorize")
 def get_authorize(authorization: Annotated[str | None, Header()]):
     if authorization is None:
@@ -64,11 +70,13 @@ def get_authorize(authorization: Annotated[str | None, Header()]):
         raise HTTPException(400,"Invalid token provided")
     return { "status": 200 }
 
+
 def load_secret(path: str) -> bytes:
     with open(path,"r") as file:
         data = file.read()
         secret = base64.b64decode(data)
         return secret
+
 
 if __name__ == "__main__":
     models.init_db(connection.ENGINE)
@@ -77,6 +85,8 @@ if __name__ == "__main__":
         conn.execute(insert(models.User).values(user_data))
         person_data = loader.load_csv("person.csv")
         conn.execute(insert(models.Person).values(person_data))
+        role_data = loader.load_csv("role.csv")
+        conn.execute(insert(models.Role).values(role_data))
         conn.commit()
     os.environ.setdefault("PORT","8080")
     PORT = os.environ.get("PORT")
