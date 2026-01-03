@@ -1,4 +1,4 @@
-import { Box, Container, Stack, Heading, Text, useBreakpointValue } from "@chakra-ui/react";
+import { Box, Container, Stack, Heading, Text } from "@chakra-ui/react";
 import { ReactNode } from "react";
 
 interface Props {
@@ -8,8 +8,6 @@ interface Props {
 }
 
 const AuthLayout = ({ title, subtitle, children }: Props) => {
-    const isDesktop = useBreakpointValue({ base: false, md: true });
-
     return (
         <Box
             minH="100vh"
@@ -29,7 +27,7 @@ const AuthLayout = ({ title, subtitle, children }: Props) => {
                 overflow="hidden"
             >
                 <Container py={10}>
-                    <Stack>
+                    <Stack gap={6}>
                         <Stack textAlign="center">
                             <Heading fontWeight="600" fontSize="22px">
                                 {title}
