@@ -2,12 +2,22 @@ import { Stack, Input, Button, Text, Field } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import AuthLayout from "../../components/auth/AuthLayout";
 import { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 
 const URL = "http://bd.wilkdaniel.com:8081/token";
 
 interface IUser {
 	username: string;
 	password: string;
+}
+
+interface IResponse {
+	token: string;
+}
+
+enum HttpStatus {
+	OK = 200,
+	NOT_FOUND = 404
 }
 
 const getToken = async (data: IUser) => {
@@ -18,6 +28,11 @@ const getToken = async (data: IUser) => {
 		},
 		body: JSON.stringify(data)
 	})
+
+	if(res.status === HttpStatus.NOT_FOUND)
+		throw Error("Incorrect username or password")
+	if(!res.ok)
+		throw Error("Failed to fetch");
 	return await res.json();
 }
 
@@ -25,12 +40,16 @@ export default function Login() {
     const [su, setSu] = useState("");
     const [sp, setSp] = useState("");
 	const [click, setClick] = useState(false);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		if(!click) return;
 		getToken({username: su, password: sp})
-			.then(res => console.log(res));
-		setClick(false)
+			.then((res: IResponse) => {
+				localStorage.setItem("token",res.token);
+				navigate("/dashboard/");
+			}).catch(err => console.error(err));
+		setClick(false);
 	},[click]);
 
     return (

@@ -1,6 +1,16 @@
-import { Outlet, Navigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Outlet, useNavigate} from 'react-router-dom';
 
 const DashboardPage = () => {
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		if(!localStorage.getItem("token")) {
+			// TODO Should check token validity!!!
+			navigate("/");
+		}
+	},[]);
+
 	return (
 		<>
 			<h1>Dashbord</h1>
@@ -9,4 +19,4 @@ const DashboardPage = () => {
 	);
 }
 
-export default DashboardPage
+export default DashboardPage;
