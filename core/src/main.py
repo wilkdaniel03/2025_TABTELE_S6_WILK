@@ -2,6 +2,7 @@ import uvicorn
 from fastapi import FastAPI, Header, HTTPException
 from typing import Annotated
 import connection
+import models
 import requests
 
 
@@ -33,5 +34,5 @@ def get_check(authorization: Annotated[str | None, Header()]):
 
 
 if __name__ == "__main__":
-    print(connection.get_auth_service_url())
+    models.init_db(connection.ENGINE)
     uvicorn.run("main:app",port=8080,host="0.0.0.0")

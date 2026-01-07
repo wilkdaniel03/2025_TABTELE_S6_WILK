@@ -1,3 +1,4 @@
+import sqlalchemy
 from sqlalchemy import MetaData, Column, Integer, String
 from sqlalchemy.orm import registry
 from dataclasses import dataclass
@@ -33,7 +34,7 @@ class Vehicle(Base):
     registration_number = Column(String(50),nullable=False)
     current_mileage = Column(Integer,nullable=False)
     production_year = Column(Integer,nullable=False)
-    status = Column(String,nullable=False)
+    status = Column(String(50),nullable=False)
 
 
 @dataclass
@@ -44,3 +45,8 @@ class VehicleDto:
     production_year: int
     status: str
     type: VehicleTypeDto
+
+
+def init_db(engine: sqlalchemy.Engine) -> None:
+    metadata.drop_all(engine)
+    metadata.create_all(engine)
