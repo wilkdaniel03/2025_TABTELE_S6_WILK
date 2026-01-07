@@ -1,4 +1,4 @@
-# 2025_TABTELE_S6_WILK / web
+# 2025_TABTELE_S6_WILK / auth
 
 ### Setup
 ```bash
