@@ -1,0 +1,32 @@
+name: Core service deployment
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'core/**'
+      - '.github/workflows/core.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - shell: bash
+        env:
+          REGISTRY_ADDR: ${{ secrets.REGISTRY_ADDR }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASS: ${{ secrets.DB_PASS }}
+          DB_DBNAME: ${{ secrets.DB_DBNAME }}
+          RUNNER_ALLOW_RUNASROOT: '1'
+        run: |
+          export CORE_VERSION=$(cat versions.json | jq .auth | tr -d '\"')
+          printf '{ "insecure-registries": [ "%s" ] }' $REGISTRY_ADDR > $PWD/daemon.json
+          sudo cp $PWD/daemon.json /etc/docker/daemon.json
+          sudo systemctl restart docker
+          cd auth
+          docker build --build-arg VERSION=$(cat pyproject.toml | awk '/^version/ { print $3 }' | tr -d '\"') \
+            --build-arg DB_HOST --build-arg DB_USER --build-arg DB_PASS --build-arg DB_DBNAME -t $REGISTRY_ADDR/auth:$CORE_VERSION .
+          docker push $REGISTRY_ADDR/auth:$CORE_VERSION
