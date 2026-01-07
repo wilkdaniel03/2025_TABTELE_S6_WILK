@@ -1,11 +1,37 @@
 import { Stack, Input, Button, Text, Field } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import AuthLayout from "../../components/auth/AuthLayout";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+const URL = "http://bd.wilkdaniel.com:8081/token";
+
+interface IUser {
+	username: string;
+	password: string;
+}
+
+const getToken = async (data: IUser) => {
+	const res = await fetch(URL,{
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json"
+		},
+		body: JSON.stringify(data)
+	})
+	return await res.json();
+}
 
 export default function Login() {
     const [su, setSu] = useState("");
     const [sp, setSp] = useState("");
+	const [click, setClick] = useState(false);
+
+	useEffect(() => {
+		if(!click) return;
+		getToken({username: su, password: sp})
+			.then(res => console.log(res));
+		setClick(false)
+	},[click]);
 
     return (
         <AuthLayout title="Welcome to fleet system" subtitle="Let's sign in">
@@ -29,7 +55,7 @@ export default function Login() {
                     bg="#5B5BF7"
                     color="white"
                     _hover={{ bg: "#4B4BEA" }}
-                    onClick={() => alert("Sign in TODO")}
+                    onClick={() => setClick(true)}
                 >
                     Sign in
                 </Button>

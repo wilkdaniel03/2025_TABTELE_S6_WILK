@@ -4,11 +4,13 @@ import { BrowserRouter as Router, Navigate, Routes, Route } from "react-router-d
 import Login from "./pages/auth/LoginScreen";
 import Register from "./pages/auth/Register";
 import ForgotPassword from "./pages/auth/ForgotPass";
-
-import Settings from "./pages/dashboard/Settings";
-import Reservations from "./pages/dashboard/Reservations";
-import Vehicles from "./pages/dashboard/Vehicles";
-import Notifications from "./pages/dashboard/Notifications";
+import {
+	Reservations,
+	Vehicles,
+	Settings,
+	Notifications,
+    DashboardPage
+} from './pages/dashboard';
 
 function App() {
     return (
@@ -16,18 +18,21 @@ function App() {
             <Router>
                 <Routes>
 
-                    <Route path="/auth/login" element={<Login />} />
-                    <Route path="/auth/register" element={<Register />} />
-                    <Route path="/auth/forgot" element={<ForgotPassword />} />
+                    <Route path="auth/login" element={<Login />} />
+                    <Route path="auth/register" element={<Register />} />
+                    <Route path="auth/forgot" element={<ForgotPassword />} />
 
-                    <Route path="/dashboard/settings" element={<Settings />} />
-                    <Route path="/dashboard/reservations" element={<Reservations />} />
-                    <Route path="/dashboard/vehicles" element={<Vehicles />} />
-                    <Route path="/dashboard/notifications" element={<Notifications />} />
+					<Route path="dashboard" element={<DashboardPage/> }>
+						<Route path="reservations" element={<Reservations />} />
+						<Route path="vehicles" element={<Vehicles />} />
+						<Route path="settings" element={<Settings />} />
+						<Route path="notifications" element={<Notifications />} />
+						<Route path="" element={<Navigate to="/dashboard/reservations" />} />
+						<Route path="*" element={<Navigate to="/dashboard/reservations" />} />
+					</Route>
 
-                    <Route path="/dashboard/*" element={<Navigate to="/dashboard/reservations" replace={true}/>} />
-                    <Route path="/auth/*" element={<Navigate to="/auth/login" replace={true}/>} />
-                    <Route path="/*" element={<Navigate to="/auth/login" replace={true}/>} />
+                    <Route path="auth/*" element={<Navigate to="/auth/login" replace={true}/>} />
+                    <Route path="*" element={<Navigate to="/auth/login" replace={true}/>} />
                 </Routes>
             </Router>
         </ChakraProvider>
