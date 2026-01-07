@@ -7,7 +7,7 @@ import base64
 import time
 from typing import Annotated, Dict
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 import connection
 import models
 import loader
@@ -31,6 +31,12 @@ expiration_time: int = 3600 * 2
 class UserLoginDto:
     username: str
     password: str
+
+
+@dataclass
+class TokenData:
+    uid: int
+    username: str
 
 
 @app.post("/token")
@@ -63,12 +69,17 @@ def get_authorize(authorization: Annotated[str | None, Header()]):
     if authorization_parts[0] != "Bearer":
         raise HTTPException(400,"Invalid token format {}. Should be Bearer".format(authorization_parts[0]))
     try:
-        jwt.decode(authorization_parts[1],secret,algorithm)
+        token: dict = jwt.decode(authorization_parts[1],secret,algorithm)
     except jwt.exceptions.ExpiredSignatureError:
         raise HTTPException(401,"Provided token is expired")
     except:
         raise HTTPException(400,"Invalid token provided")
-    return { "status": 200 }
+    token_fields = ["iss","sub"]
+    token_has_fields = [k in token.keys() for k in token_fields]
+    if not all(token_has_fields):
+        raise HTTPException(500,"Failed to read token")
+    token_data = TokenData(*(token[k] for k in token_fields))
+    return asdict(token_data)
 
 
 @app.get("/role/{user_id}")
