@@ -20,4 +20,4 @@ def get_db_url() -> sqlalchemy.URL:
     return sqlalchemy.URL.create("mysql+pymysql",user,password,host,port,dbname)
 
 
-ENGINE = sqlalchemy.create_engine(get_db_url())
+ENGINE = sqlalchemy.create_engine(get_db_url(),echo=True)

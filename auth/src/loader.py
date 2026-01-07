@@ -1,4 +1,4 @@
-from models import PersonDto, UserDto
+from models import PersonDto, UserDto, RoleDto
 import csv
 from typing import Any
 from dataclasses import asdict
@@ -10,6 +10,7 @@ def get_dto_type(name: str) -> Any:
     match name:
         case 'person': Type = PersonDto
         case 'user': Type = UserDto.from_str
+        case 'role': Type = RoleDto
     return Type
 
 # read csv file and insert data into database

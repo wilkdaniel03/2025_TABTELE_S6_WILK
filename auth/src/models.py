@@ -11,12 +11,11 @@ Base = registry(metadata=metadata).generate_base()
 class User(Base):
     __tablename__ = "user"
 
-    user_id = Column(Integer,primary_key=True,unique=True,nullable=False)
+    user_id = Column(Integer,primary_key=True,autoincrement=True,nullable=False)
     username = Column(String(50),nullable=False)
     password = Column(String(50),nullable=False)
     last_login = Column(DateTime,nullable=False)
     is_active = Column(Boolean,nullable=False)
-    is_admin = Column(Boolean,default=False,nullable=False)
 
 
 def str_to_bool(input: str) -> bool:
@@ -32,17 +31,17 @@ class UserDto:
     password: str
     last_login: datetime
     is_active: bool
-    is_admin: bool
 
     @classmethod
     def from_str(cls,username:str,password:str,last_login:datetime,is_active:str,is_admin:str):
-        return cls(username,password,last_login,str_to_bool(is_active),str_to_bool(is_admin))
+        # is_admin field not used in the db schema anymore
+        return cls(username,password,last_login,str_to_bool(is_active))
 
 
 class Person(Base):
     __tablename__ = "person"
 
-    person_id = Column(Integer,primary_key=True,unique=True,nullable=False)
+    person_id = Column(Integer,primary_key=True,autoincrement=True,nullable=False)
     name = Column(String(50),nullable=False)
     surname = Column(String(50),nullable=False)
     date_of_birth = Column(Date,nullable=False)
@@ -60,6 +59,20 @@ class PersonDto:
     phone_number: str
     pesel: str
     nationality: str
+    user_id: int
+
+
+class Role(Base):
+    __tablename__ = "role"
+
+    role_id = Column(Integer,primary_key=True,autoincrement=True,nullable=False)
+    name = Column(String(50),nullable=False)
+    user_id = Column(Integer,ForeignKey(User.user_id,onupdate="CASCADE",ondelete="CASCADE"),unique=True,nullable=False)
+
+
+@dataclass
+class RoleDto:
+    name: str
     user_id: int
 
 
