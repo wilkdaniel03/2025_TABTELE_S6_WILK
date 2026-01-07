@@ -36,10 +36,11 @@ const getToken = async (data: IUser) => {
 	return await res.json();
 }
 
-export default function Login() {
-    const [su, setSu] = useState("");
-    const [sp, setSp] = useState("");
-	const [click, setClick] = useState(false);
+const Login = () => {
+    const [su, setSu] = useState<string>("");
+    const [sp, setSp] = useState<string>("");
+	const [click, setClick] = useState<boolean>(false);
+	const [error, setError] = useState<string>("");
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -48,7 +49,7 @@ export default function Login() {
 			.then((res: IResponse) => {
 				localStorage.setItem("token",res.token);
 				navigate("/dashboard/");
-			}).catch(err => console.error(err));
+			}).catch(err => setError(err.message));
 		setClick(false);
 	},[click]);
 
@@ -68,6 +69,8 @@ export default function Login() {
                     </Field.Label>
                     <Input h="44px" placeholder="Your password" type="password" value={sp} onChange={(e) => setSp(e.target.value)} />
                 </Field.Root>
+
+				<span style={{color: "red"}}>{ error }</span>
 
                 <Button
                     h="48px"
@@ -92,3 +95,5 @@ export default function Login() {
         </AuthLayout>
     );
 }
+
+export default Login;

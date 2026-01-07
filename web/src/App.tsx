@@ -27,8 +27,8 @@ function App() {
 						<Route path="vehicles" element={<Vehicles />} />
 						<Route path="settings" element={<Settings />} />
 						<Route path="notifications" element={<Notifications />} />
-						<Route path="" element={<Navigate to="/dashboard/reservations" />} />
-						<Route path="*" element={<Navigate to="/dashboard/reservations" />} />
+						<Route path="" element={<Navigate to="/dashboard/reservations" replace={true} />} />
+						<Route path="*" element={<Navigate to="/dashboard/reservations" replace={true} />} />
 					</Route>
 
                     <Route path="auth/*" element={<Navigate to="/auth/login" replace={true}/>} />
