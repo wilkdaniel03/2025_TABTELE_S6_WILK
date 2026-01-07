@@ -30,4 +30,5 @@ def get_db_url():
     return sqlalchemy.URL.create("mysql+pymysql",user,password,host,port,dbname)
 
 
+AUTH_URL = get_auth_service_url()
 ENGINE = sqlalchemy.create_engine(get_db_url())
