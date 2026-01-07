@@ -20,7 +20,11 @@ exports.runDevServer = () => ({
 			port: PORT,
 			static: path.join(__dirname,'dist'),
 			host: '0.0.0.0',
-			historyFallback: true
+			historyFallback: {
+				htmlAcceptHeaders: ['text/html','*/*'],
+				rewrites: []
+			},
+			hmr: true
 		})
 	]
 });
