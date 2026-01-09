@@ -1,6 +1,6 @@
 import { Box, Heading, Text } from "@chakra-ui/react";
 
-export default function Reservations() {
+const ReservationsPage = () => {
     return (
         <Box p={6}>
             <Heading mb={4}>Reservations</Heading>
@@ -8,3 +8,5 @@ export default function Reservations() {
         </Box>
     );
 }
+
+export default ReservationsPage;

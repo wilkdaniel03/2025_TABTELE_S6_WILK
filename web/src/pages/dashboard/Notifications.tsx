@@ -1,6 +1,6 @@
 import { Box, Heading, Text } from "@chakra-ui/react";
 
-export default function Notifications() {
+const NotificationsPage = () => {
     return (
         <Box p={6}>
             <Heading mb={4}>Notifications</Heading>
@@ -8,3 +8,5 @@ export default function Notifications() {
         </Box>
     );
 }
+
+export default NotificationsPage;

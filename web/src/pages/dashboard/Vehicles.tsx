@@ -1,6 +1,6 @@
 import { Box, Heading, Text } from "@chakra-ui/react";
 
-export default function Vehicles() {
+const VehiclesPage = () => {
     return (
         <Box p={6}>
             <Heading mb={4}>Vehicles</Heading>
@@ -8,3 +8,5 @@ export default function Vehicles() {
         </Box>
     );
 }
+
+export default VehiclesPage

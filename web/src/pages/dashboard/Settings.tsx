@@ -1,6 +1,6 @@
 import { Box, Heading, Text } from "@chakra-ui/react";
 
-export default function Settings() {
+const SettingsPage = () => {
     return (
         <Box p={6}>
             <Heading mb={4}>Settings</Heading>
@@ -8,3 +8,5 @@ export default function Settings() {
         </Box>
     );
 }
+
+export default SettingsPage;
