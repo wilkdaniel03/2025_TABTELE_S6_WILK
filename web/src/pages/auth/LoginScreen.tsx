@@ -1,6 +1,6 @@
 import { Stack, Input, Button, Text, Field } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import AuthLayout from "../../components/auth/AuthLayout";
+import AuthLayout from "@components/auth/AuthLayout";
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate, Navigate } from 'react-router-dom';
 

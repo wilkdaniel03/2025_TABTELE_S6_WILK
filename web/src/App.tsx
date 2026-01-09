@@ -1,16 +1,16 @@
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 import { BrowserRouter as Router, Navigate, Routes, Route } from "react-router-dom";
 
-import Login from "./pages/auth/LoginScreen";
-import Register from "./pages/auth/Register";
-import ForgotPassword from "./pages/auth/ForgotPass";
+import Login from "@pages/auth/LoginScreen";
+import Register from "@pages/auth/Register";
+import ForgotPassword from "@pages/auth/ForgotPass";
 import {
 	Reservations,
 	Vehicles,
 	Settings,
 	Notifications,
     DashboardPage
-} from './pages/dashboard';
+} from '@pages/dashboard';
 
 function App() {
     return (
