@@ -1,19 +1,16 @@
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 import * as Chakra from "@chakra-ui/react";
-
-interface LoadingButtonProps {
-	color: string;
-	children: ReactNode;
-}
 
 export enum LoadingButtonState {
 	INACTIVE = 1,
 	LOADING = 2
 }
 
-const handleClick = (current: LoadingButtonState, func: (arg: LoadingButtonState) => void) => {
-	current = (current << 1) % 3;
-	func(current);
+interface LoadingButtonProps {
+	click: () => void;
+	state: LoadingButtonState;
+	color: string;
+	children: ReactNode;
 }
 
 const ProgressCircle = () => {
@@ -28,16 +25,15 @@ const ProgressCircle = () => {
 }
 
 const LoadingButton = (props: LoadingButtonProps) => {
-	const [buttonState, setButtonState] = useState<LoadingButtonState>(LoadingButtonState.INACTIVE);
 	return (
 		<Chakra.Button 
 			display="block"
 			bg={props.color}
 			w="full"
 			fontWeight="semibold"
-			onClick={() => handleClick(buttonState,setButtonState)}>
+			onClick={props.click}>
 				{props.children}
-				{buttonState === LoadingButtonState.LOADING ? "" : <ProgressCircle/>}
+				{props.state === LoadingButtonState.LOADING ? <ProgressCircle/> : ""}
 		</Chakra.Button>
 	);
 }
