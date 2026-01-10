@@ -26,6 +26,15 @@ class VehicleTypeDto:
     segment: str
 
 
+@dataclass
+class VehicleTypeRec:
+    id: int
+    brand: str
+    model: str
+    version: str
+    segment: str
+
+
 class Vehicle(Base):
     __tablename__ = "vehicle"
 
@@ -39,6 +48,17 @@ class Vehicle(Base):
 
 @dataclass
 class VehicleDto:
+    vin: str
+    registration_number: str
+    current_mileage: int
+    production_year: int
+    status: str
+    type: VehicleTypeDto
+
+
+@dataclass
+class VehicleRec:
+    id: int 
     vin: str
     registration_number: str
     current_mileage: int
