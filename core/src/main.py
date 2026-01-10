@@ -1,5 +1,5 @@
 import uvicorn
-from fastapi import FastAPI, Header, HTTPException
+from fastapi import FastAPI, Header, HTTPException, Request, Response
 from typing import Annotated
 from sqlalchemy import insert, select
 import connection
@@ -19,20 +19,22 @@ def get_hello():
     return { "msg": "hello" }
 
 
-@app.get("/check")
-def get_check(authorization: Annotated[str | None, Header()]):
-    if authorization is None:
-        raise ValueError("authorization header not found")
-    auth_header: list[str] = authorization.split(" ")
-    if authorization.split(" ")[TOKEN_TYPE_IDX] != "Bearer":
-        raise HTTPException(400,"{} token type not supported".format(auth_header[0]))
+@app.middleware("http")
+async def token_verification(req: Request, next):
+    token_header = req.headers["Authorization"]
+    if token_header is None:
+        raise HTTPException(400,"authorization header not found")
+    token_header_splitted: list[str] = token_header.split(" ")
+    if token_header_splitted[TOKEN_TYPE_IDX] != "Bearer":
+        raise HTTPException(400,"{} token type not supported".format(token_header_splitted[TOKEN_TYPE_IDX]))
 
     headers = {
-        "Authorization": "Bearer {}".format(auth_header[1])
+        "Authorization": "Bearer {}".format(token_header_splitted[TOKEN_VAL_IDX])
     }
-    res = requests.get("{}/authorize".format(connection.AUTH_URL),headers=headers)
-
-    return res.json()
+    auth_res = requests.get("{}/authorize".format(connection.AUTH_URL),headers=headers)
+    if not auth_res.ok:
+        return Response(status_code=auth_res.status_code,headers=auth_res.headers,content=auth_res.content)
+    return await next(req)
 
 
 @app.get("/vehicletype")
