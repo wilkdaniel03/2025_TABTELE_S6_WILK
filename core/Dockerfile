@@ -26,6 +26,7 @@ WORKDIR /app
 COPY --from=UV /app/dist/core-$VERSION.tar.gz ./app.tar.gz
 RUN tar -xvf ./app.tar.gz
 WORKDIR /app/core-$VERSION
+ADD *csv ./
 RUN printf 'from setuptools import setup\nsetup()\n' > setup.py
 RUN python3 -m venv .venv
 RUN .venv/bin/pip3 install setuptools
