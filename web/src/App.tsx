@@ -1,16 +1,17 @@
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 import { BrowserRouter as Router, Navigate, Routes, Route } from "react-router-dom";
 
-import Login from "./pages/auth/LoginScreen";
-import Register from "./pages/auth/Register";
-import ForgotPassword from "./pages/auth/ForgotPass";
+import Login from "@pages/auth/LoginScreen";
+import Register from "@pages/auth/Register";
+import ForgotPassword from "@pages/auth/ForgotPass";
 import {
-	Reservations,
-	Vehicles,
-	Settings,
-	Notifications,
+	ReservationsPage,
+	VehiclesPage,
+	SettingsPage,
+	NotificationsPage,
+	EmployeesPage,
     DashboardPage
-} from './pages/dashboard';
+} from '@pages/dashboard';
 
 function App() {
     return (
@@ -23,11 +24,14 @@ function App() {
                     <Route path="auth/forgot" element={<ForgotPassword />} />
 
 					<Route path="dashboard" element={<DashboardPage/> }>
-						<Route path="reservations" element={<Reservations />} />
-						<Route path="vehicles" element={<Vehicles />} />
-						<Route path="settings" element={<Settings />} />
-						<Route path="notifications" element={<Notifications />} />
-						<Route path="" element={<Navigate to="/dashboard/reservations" replace={true} />} />
+						<Route path="">
+							<Route path="" element={<Navigate to="/dashboard/reservations" replace={true} />} />
+							<Route path="reservations" element={<ReservationsPage />} />
+							<Route path="employees" element={<EmployeesPage />} />
+							<Route path="vehicles" element={<VehiclesPage />} />
+							<Route path="settings" element={<SettingsPage />} />
+						</Route>
+						<Route path="notifications" element={<NotificationsPage />} />
 						<Route path="*" element={<Navigate to="/dashboard/reservations" replace={true} />} />
 					</Route>
 

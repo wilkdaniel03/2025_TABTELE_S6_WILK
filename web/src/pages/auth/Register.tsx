@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Stack, Input, Button, Select, NativeSelect, Field} from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import AuthLayout from "../../components/auth/AuthLayout";
+import AuthLayout from "@components/auth/AuthLayout";
 export default function Register() {
     const [sc, setSc] = useState("");
     const [su, setSu] = useState("");

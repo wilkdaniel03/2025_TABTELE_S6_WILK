@@ -8,9 +8,19 @@
 		"jsx": "react-jsx",
 		"strict": true,
 		"skipLibCheck": true,
+		"baseUrl": "./src",
 		"rootDir": "./src",
 		"outDir": "./dist",
-		"lib": [ "DOM", "ESNext" ]
+		"lib": [ "DOM", "ESNext" ],
+		"paths": {
+			"@pages/*": ["./pages/*"],
+			"@components/*": ["./components/*"],
+			"@features/*": ["./features/*"],
+			"@pages": ["./pages"],
+			"@components": ["./components"],
+			"@features": ["./features"],
+			"@http": ["./http.ts"]
+		}
 	},
 	"include": ["./src/**/*.ts","./src/**/*.tsx","./assets/*"],
 	"exclude": ["./node_modules"]
