@@ -24,14 +24,17 @@ const ToastIcon = (props: IToastIconProps) => {
 }
 
 interface IToastProps {
+	id: number;
 	type: ToastIconType;
 	children: ReactNode;
 }
 
 const Toast = (props: IToastProps) => {
+	const { remove } = useToastStore();
+
 	return (
 		<Chakra.Card.Root mb="10px" mr="10px" px="10px">
-			<Chakra.Box position="absolute" right="0" top="0" mt="5px" mr="5px"><IoMdClose size="20px"/></Chakra.Box>
+			<Chakra.Box onClick={() => remove(props.id)} _hover={{cursor:"pointer"}} position="absolute" right="0" top="0" mt="5px" mr="5px"><IoMdClose size="20px"/></Chakra.Box>
 			<Chakra.Flex alignItems="center">
 				<ToastIcon type={props.type}/>
 				<Chakra.Card.Body>
@@ -51,7 +54,7 @@ const ToastBox = () => {
 			<>
 				{createPortal(
 					<>
-						{messages.map((msg,index) => <Toast key={index} type={msg.type}>{msg.message}</Toast>)}
+						{messages.map((msg,index) => <Toast key={index} id={msg.id} type={msg.type}>{msg.message}</Toast>)}
 					</>,
 					container
 				)}

@@ -12,14 +12,22 @@ interface  IToastMessage {
 	message: string;
 }
 
+interface IToastMessageRec extends IToastMessage {
+	id: number;
+}
+
 interface IToastStore {
-	messages: IToastMessage[];
+	messages: IToastMessageRec[];
+	prev_id: number;
 	append: (msg: IToastMessage) => void;
+	remove: (id: number) => void;
 	clear: () => void;
 }
 
 export const useToastStore = create<IToastStore>((set) => ({
 	messages: [],
-	append: (msg) => set((state) => { state.messages.push(msg); return { messages: state.messages}}),
+	prev_id: 0,
+	append: (msg) => set((state) => { state.messages.push({id:state.prev_id+1,type:msg.type,message:msg.message}); return { messages: state.messages, prev_id: state.prev_id+1}}),
+	remove: (id) => set((state) => { state.messages = state.messages.filter(msg => msg.id != id); return { messages: state.messages }}),
 	clear: () => set((state) => { state.messages.length = 0; return { messages: state.messages }})
 }))
