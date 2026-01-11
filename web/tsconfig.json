@@ -18,7 +18,8 @@
 			"@features/*": ["./features/*"],
 			"@pages": ["./pages"],
 			"@components": ["./components"],
-			"@features": ["./features"]
+			"@features": ["./features"],
+			"@http": ["./http.ts"]
 		}
 	},
 	"include": ["./src/**/*.ts","./src/**/*.tsx","./assets/*"],

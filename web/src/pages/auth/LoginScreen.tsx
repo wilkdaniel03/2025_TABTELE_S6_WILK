@@ -2,6 +2,7 @@ import { Stack, Input, Button, Text, Field } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import AuthLayout from "@components/auth/AuthLayout";
 import { LoadingButton, LoadingButtonState } from "@components";
+import { HttpStatus } from "@http";
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate, Navigate } from 'react-router-dom';
 
@@ -14,11 +15,6 @@ interface IUser {
 
 interface IResponse {
 	token: string;
-}
-
-enum HttpStatus {
-	OK = 200,
-	NOT_FOUND = 404
 }
 
 const getToken = async (data: IUser) => {
