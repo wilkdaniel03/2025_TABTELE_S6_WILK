@@ -46,6 +46,7 @@ class Vehicle(Base):
     current_mileage = Column(Integer,nullable=False)
     production_year = Column(Integer,nullable=False)
     status = Column(String(50),nullable=False)
+    vehtype_id = Column(Integer,nullable=False)
 
 
 @dataclass
@@ -55,7 +56,7 @@ class VehicleDto:
     current_mileage: int
     production_year: int
     status: str
-    type: VehicleTypeDto
+    vehtype_id: int
 
 
 @dataclass
