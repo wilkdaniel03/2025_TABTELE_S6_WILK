@@ -44,16 +44,7 @@ const Toast = (props: IToastProps) => {
 
 const ToastBox = () => {
 	const container = document.querySelector("#toastbox");
-	const { messages, append } = useToastStore();
-
-	useEffect(() => {
-		append({ type: ToastIconType.ERROR, message: "Fail" })
-		append({ type: ToastIconType.WARNING, message: "Warning" })
-		append({ type: ToastIconType.SUCCESS, message: "Success" })
-		append({ type: ToastIconType.INFORMATION, message: "Information" })
-	},[]);
-
-	console.log(messages);
+	const { messages } = useToastStore();
 
 	if(container) {
 		return (
