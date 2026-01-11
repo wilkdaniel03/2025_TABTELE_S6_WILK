@@ -15,9 +15,11 @@ interface  IToastMessage {
 interface IToastStore {
 	messages: IToastMessage[];
 	append: (msg: IToastMessage) => void;
+	clear: () => void;
 }
 
 export const useToastStore = create<IToastStore>((set) => ({
 	messages: [],
-	append: (msg) => set((state) => { state.messages.push(msg); return { messages: state.messages}})
+	append: (msg) => set((state) => { state.messages.push(msg); return { messages: state.messages}}),
+	clear: () => set((state) => { state.messages.length = 0; return { messages: state.messages }})
 }))
