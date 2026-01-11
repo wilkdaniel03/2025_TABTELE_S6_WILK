@@ -1,5 +1,5 @@
 import sqlalchemy
-from sqlalchemy import MetaData, Column, Integer, String
+from sqlalchemy import MetaData, Column, Integer, String, UniqueConstraint
 from sqlalchemy.orm import registry
 from dataclasses import dataclass
 
@@ -16,6 +16,8 @@ class VehicleType(Base):
     model = Column(String(50),nullable=False)
     version = Column(String(50),nullable=False)
     segment = Column(String(50),nullable=False)
+
+    __table_args__ = (UniqueConstraint("brand","model",name="brand_model_unique_constraint"),)
 
 
 @dataclass
@@ -39,11 +41,12 @@ class Vehicle(Base):
     __tablename__ = "vehicle"
 
     veh_id = Column(Integer,primary_key=True,autoincrement=True,nullable=False) 
-    vin = Column(String(50),nullable=False)
-    registration_number = Column(String(50),nullable=False)
+    vin = Column(String(50),unique=True,nullable=False)
+    registration_number = Column(String(50),unique=True,nullable=False)
     current_mileage = Column(Integer,nullable=False)
     production_year = Column(Integer,nullable=False)
     status = Column(String(50),nullable=False)
+    vehtype_id = Column(Integer,nullable=False)
 
 
 @dataclass
@@ -53,7 +56,7 @@ class VehicleDto:
     current_mileage: int
     production_year: int
     status: str
-    type: VehicleTypeDto
+    vehtype_id: int
 
 
 @dataclass
@@ -64,8 +67,7 @@ class VehicleRec:
     current_mileage: int
     production_year: int
     status: str
-    type: VehicleTypeDto
-
+    type: VehicleTypeRec
 
 def init_db(engine: sqlalchemy.Engine) -> None:
     metadata.drop_all(engine)

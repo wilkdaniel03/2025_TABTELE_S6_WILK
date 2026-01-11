@@ -1,11 +1,13 @@
 import uvicorn
 from fastapi import FastAPI, Header, HTTPException, Request, Response
-from typing import Annotated
-from sqlalchemy import insert, select
+from typing import Annotated, Any
+from sqlalchemy import insert, select, delete
+from dataclasses import asdict
 import connection
 import models
 import requests
 import loader
+import json
 
 
 app =  FastAPI()
@@ -21,12 +23,12 @@ def get_hello():
 
 @app.middleware("http")
 async def token_verification(req: Request, next):
+    if "authorization" not in req.headers.keys():
+        return Response(status_code=400,headers={"Content-Type":"application/json"},content=json.dumps({"detail":"authorization header not found"}))
     token_header = req.headers["Authorization"]
-    if token_header is None:
-        raise HTTPException(400,"authorization header not found")
     token_header_splitted: list[str] = token_header.split(" ")
     if token_header_splitted[TOKEN_TYPE_IDX] != "Bearer":
-        raise HTTPException(400,"{} token type not supported".format(token_header_splitted[TOKEN_TYPE_IDX]))
+        return Response(status_code=400,headers={"Content-Type":"application/json"},content=json.dumps({"detail":"{} token type not supported".format(token_header_splitted[TOKEN_TYPE_IDX])}))
 
     headers = {
         "Authorization": "Bearer {}".format(token_header_splitted[TOKEN_VAL_IDX])
@@ -34,6 +36,8 @@ async def token_verification(req: Request, next):
     auth_res = requests.get("{}/authorize".format(connection.AUTH_URL),headers=headers)
     if not auth_res.ok:
         return Response(status_code=auth_res.status_code,headers=auth_res.headers,content=auth_res.content)
+
+    req.state.myObject = auth_res.json()["uid"]
     return await next(req)
 
 
@@ -48,10 +52,88 @@ def get_vehicletype():
         return res
 
 
+@app.post("/vehicletype")
+def post_vehicletype(req: Request, body: models.VehicleTypeDto):
+    role_res = requests.get("{}/role/{}".format(connection.AUTH_URL,req.state.myObject))
+    if role_res.json()["role"] != "admin":
+        raise HTTPException(403,"User have to be admin to access this resource")
+    with connection.ENGINE.connect() as conn:
+        try:
+            conn.execute(insert(models.VehicleType).values(asdict(body)))
+            conn.commit()
+        except:
+            raise HTTPException(400,"Failed to insert provided vehicletype")
+        else:
+            return {"status":200}
+
+
+@app.delete("/vehicletype/{vid}")
+def delete_vehicletype(req: Request, vid: int):
+    role_res = requests.get("{}/role/{}".format(connection.AUTH_URL,req.state.myObject))
+    if role_res.json()["role"] != "admin":
+        raise HTTPException(403,"User have to be admin to access this resource")
+    with connection.ENGINE.connect() as conn:
+        conn.execute(delete(models.VehicleType).where(models.VehicleType.vehtype_id == vid))
+        conn.commit()
+        return {"status":200}
+
+
+@app.get("/vehicle")
+def get_vehicle():
+    with connection.ENGINE.connect() as conn:
+        sel = select(models.Vehicle)
+        vehicle_res = conn.execute(sel).fetchall()
+        if len(vehicle_res) == 0:
+            raise HTTPException(404,"Failed to find any vehicles")
+        vehicles = [x[:-1] for x in vehicle_res]
+        vehtype_ids = [x[-1] for x in vehicle_res]
+
+        sel = select(models.VehicleType)
+        vehtype_res = conn.execute(sel).fetchall()
+        if len(vehtype_res) == 0:
+            raise HTTPException(404,"Failed to find any vehicle types")
+        vehtypes = [models.VehicleTypeRec(*x) for x in vehtype_res]
+
+        res = []
+        for i in range(len(vehicle_res)):
+            vehtype_id = vehtype_ids[i] - 1
+            res.append(models.VehicleRec(*vehicles[i],vehtypes[vehtype_id])) # type: ignore
+
+        return res
+
+
+@app.post("/vehicle")
+def post_vehicle(req: Request, body: models.VehicleDto):
+    role_res = requests.get("{}/role/{}".format(connection.AUTH_URL,req.state.myObject))
+    if role_res.json()["role"] != "admin":
+        raise HTTPException(403,"User have to be admin to access this resource")
+    with connection.ENGINE.connect() as conn:
+        try:
+            conn.execute(insert(models.Vehicle).values(asdict(body)))
+            conn.commit()
+        except:
+            raise HTTPException(400,"Failed to insert provided vehicle")
+        else:
+            return {"status":200}
+
+
+@app.delete("/vehicle/{vid}")
+def delete_vehicle(req: Request, vid: int):
+    role_res = requests.get("{}/role/{}".format(connection.AUTH_URL,req.state.myObject))
+    if role_res.json()["role"] != "admin":
+        raise HTTPException(403,"User have to be admin to access this resource")
+    with connection.ENGINE.connect() as conn:
+        conn.execute(delete(models.Vehicle).where(models.Vehicle.veh_id == vid))
+        conn.commit()
+        return {"status":200}
+
+
 def load_data() -> None:
     vehicle_type_data = loader.load_csv("vehicletype.csv")
+    vehicle_data = loader.load_csv("vehicle.csv")
     with connection.ENGINE.connect() as conn:
         conn.execute(insert(models.VehicleType).values(vehicle_type_data))
+        conn.execute(insert(models.Vehicle).values(vehicle_data))
         conn.commit()
 
 
