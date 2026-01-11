@@ -1,5 +1,6 @@
-import { ToastIconType } from "./ToastStore";
+import { ToastIconType, useToastStore } from "./ToastStore";
 
 export {
-	ToastIconType
+	ToastIconType,
+	useToastStore
 }

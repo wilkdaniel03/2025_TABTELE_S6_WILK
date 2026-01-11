@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { useEffect, ReactNode } from "react";
 import { createPortal } from "react-dom";
 import * as Chakra from "@chakra-ui/react";
 import { MdErrorOutline } from "react-icons/md";
@@ -6,6 +6,7 @@ import { BiError } from "react-icons/bi";
 import { MdDone } from "react-icons/md";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 import { IoMdClose } from "react-icons/io";
+import { ToastIconType, useToastStore } from "@stores";
 
 const ICON_SIZE: string = "28px"
 
@@ -43,12 +44,24 @@ const Toast = (props: IToastProps) => {
 
 const ToastBox = () => {
 	const container = document.querySelector("#toastbox");
+	const { messages, append } = useToastStore();
+
+	useEffect(() => {
+		append({ type: ToastIconType.ERROR, message: "Fail" })
+		append({ type: ToastIconType.WARNING, message: "Warning" })
+		append({ type: ToastIconType.SUCCESS, message: "Success" })
+		append({ type: ToastIconType.INFORMATION, message: "Information" })
+	},[]);
+
+	console.log(messages);
 
 	if(container) {
 		return (
 			<>
 				{createPortal(
-					<><Toast type={0}>a</Toast><Toast type={1}>b</Toast><Toast type={2}>c</Toast><Toast type={3}>d</Toast></>,
+					<>
+						{messages.map((msg,index) => <Toast key={index} type={msg.type}>{msg.message}</Toast>)}
+					</>,
 					container
 				)}
 			</>
