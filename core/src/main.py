@@ -1,7 +1,7 @@
 import uvicorn
 from fastapi import FastAPI, Header, HTTPException, Request, Response
 from typing import Annotated
-from sqlalchemy import insert, select
+from sqlalchemy import insert, select, delete
 from dataclasses import asdict
 import connection
 import models
@@ -65,6 +65,17 @@ def post_vehicletype(req: Request, body: models.VehicleTypeDto):
             raise HTTPException(400,"Failed to insert provided vehicletype")
         else:
             return {"status":200}
+
+
+@app.delete("/vehicletype/{vid}")
+def delete_vehicletype(req: Request, vid: int):
+    role_res = requests.get("{}/role/{}".format(connection.AUTH_URL,req.state.myObject))
+    if role_res.json()["role"] != "admin":
+        raise HTTPException(403,"User have to be admin to access this resource")
+    with connection.ENGINE.connect() as conn:
+        conn.execute(delete(models.VehicleType).where(models.VehicleType.vehtype_id == vid))
+        conn.commit()
+        return {"status":200}
 
 
 def load_data() -> None:
