@@ -67,8 +67,7 @@ class VehicleRec:
     current_mileage: int
     production_year: int
     status: str
-    type: VehicleTypeDto
-
+    type: VehicleTypeRec
 
 def init_db(engine: sqlalchemy.Engine) -> None:
     metadata.drop_all(engine)

@@ -1,6 +1,6 @@
 import uvicorn
 from fastapi import FastAPI, Header, HTTPException, Request, Response
-from typing import Annotated
+from typing import Annotated, Any
 from sqlalchemy import insert, select, delete
 from dataclasses import asdict
 import connection
@@ -76,6 +76,30 @@ def delete_vehicletype(req: Request, vid: int):
         conn.execute(delete(models.VehicleType).where(models.VehicleType.vehtype_id == vid))
         conn.commit()
         return {"status":200}
+
+
+@app.get("/vehicle")
+def get_vehicle():
+    with connection.ENGINE.connect() as conn:
+        sel = select(models.Vehicle)
+        vehicle_res = conn.execute(sel).fetchall()
+        if len(vehicle_res) == 0:
+            raise HTTPException(404,"Failed to find any vehicles")
+        vehicles = [x[:-1] for x in vehicle_res]
+        vehtype_ids = [x[-1] for x in vehicle_res]
+
+        sel = select(models.VehicleType)
+        vehtype_res = conn.execute(sel).fetchall()
+        if len(vehtype_res) == 0:
+            raise HTTPException(404,"Failed to find any vehicle types")
+        vehtypes = [models.VehicleTypeRec(*x) for x in vehtype_res]
+
+        res = []
+        for i in range(len(vehicle_res)):
+            vehtype_id = vehtype_ids[i] - 1
+            res.append(models.VehicleRec(*vehicles[i],vehtypes[vehtype_id])) # type: ignore
+
+        return res
 
 
 def load_data() -> None:
