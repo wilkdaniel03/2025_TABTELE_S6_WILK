@@ -12,10 +12,12 @@ import {
 	EmployeesPage,
     DashboardPage
 } from '@pages/dashboard';
+import { ToastBox } from "@features";
 
 function App() {
     return (
         <ChakraProvider value={defaultSystem}>
+			<ToastBox/>
             <Router>
                 <Routes>
 
