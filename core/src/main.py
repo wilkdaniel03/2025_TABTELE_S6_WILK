@@ -102,6 +102,21 @@ def get_vehicle():
         return res
 
 
+@app.post("/vehicle")
+def post_vehicletype(req: Request, body: models.VehicleDto):
+    role_res = requests.get("{}/role/{}".format(connection.AUTH_URL,req.state.myObject))
+    if role_res.json()["role"] != "admin":
+        raise HTTPException(403,"User have to be admin to access this resource")
+    with connection.ENGINE.connect() as conn:
+        try:
+            conn.execute(insert(models.Vehicle).values(asdict(body)))
+            conn.commit()
+        except:
+            raise HTTPException(400,"Failed to insert provided vehicle")
+        else:
+            return {"status":200}
+
+
 def load_data() -> None:
     vehicle_type_data = loader.load_csv("vehicletype.csv")
     vehicle_data = loader.load_csv("vehicle.csv")
