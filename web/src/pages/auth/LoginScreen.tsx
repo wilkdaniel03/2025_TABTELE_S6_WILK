@@ -5,6 +5,7 @@ import { LoadingButton, LoadingButtonState } from "@components";
 import { HttpStatus } from "@http";
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate, Navigate } from 'react-router-dom';
+import { useToastStore, ToastIconType } from "@stores";
 
 const URL = "http://bd.wilkdaniel.com:8081/token";
 
@@ -41,6 +42,7 @@ const Login = () => {
 	const [buttonState, setButtonState] = useState<LoadingButtonState>(LoadingButtonState.INACTIVE);
 	const navigate = useNavigate();
 	let should_redirect: boolean = false;
+	const { append } = useToastStore();
 
 	useMemo(() => {
 		if(localStorage.getItem("token"))
@@ -57,6 +59,7 @@ const Login = () => {
 				setButtonState(LoadingButtonState.INACTIVE);
 			}).catch(err => {
 				setError(err.message);
+				append({type:ToastIconType.ERROR,message:err.message});
 				setButtonState(LoadingButtonState.INACTIVE);
 			});
 		setClick(false);

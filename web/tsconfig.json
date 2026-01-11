@@ -19,7 +19,9 @@
 			"@pages": ["./pages"],
 			"@components": ["./components"],
 			"@features": ["./features"],
-			"@http": ["./http.ts"]
+			"@http": ["./http.ts"],
+			"@stores/*": ["./stores/*"],
+			"@stores": ["./stores"]
 		}
 	},
 	"include": ["./src/**/*.ts","./src/**/*.tsx","./assets/*"],

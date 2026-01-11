@@ -4,15 +4,6 @@ import { IVehicleResponse } from "@http";
 
 const FIELDS: string[] = ["brand","model","vin","registration_number","production_year","current_mileage","status"];
 
-const DATA: string[][] = [
-	["a","b","c","d","e","f","g"],
-	["a","b","c","d","e","f","g"],
-	["a","b","c","d","e","f","g"],
-	["a","b","c","d","e","f","g"],
-	["a","b","c","d","e","f","g"],
-	["a","b","c","d","e","f","g"]
-]
-
 const fetchVehicles = async () => {
 	const res = await fetch(`http://bd.wilkdaniel.com:8082/vehicle`,{
 		method: "GET",
