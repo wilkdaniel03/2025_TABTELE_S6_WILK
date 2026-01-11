@@ -1,5 +1,5 @@
 import sqlalchemy
-from sqlalchemy import MetaData, Column, Integer, String
+from sqlalchemy import MetaData, Column, Integer, String, UniqueConstraint
 from sqlalchemy.orm import registry
 from dataclasses import dataclass
 
@@ -16,6 +16,8 @@ class VehicleType(Base):
     model = Column(String(50),nullable=False)
     version = Column(String(50),nullable=False)
     segment = Column(String(50),nullable=False)
+
+    __table_args__ = (UniqueConstraint("brand","model",name="brand_model_unique_constraint"),)
 
 
 @dataclass
