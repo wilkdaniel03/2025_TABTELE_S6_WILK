@@ -20,7 +20,7 @@ interface ITableRowProps {
 const TableRow = (props: ITableRowProps) => {
 	return (
 		<Chakra.Table.Row>
-			{props.data.map((index,cell) => {
+			{props.data.map((cell,index) => {
 				return <Chakra.Table.Cell key={index}>{cell}</Chakra.Table.Cell>
 			})}
 		</Chakra.Table.Row>
@@ -36,7 +36,7 @@ const Table = (props: ITableProps) => {
 	return (
 		<Chakra.Table.Root interactive>
 			<TableHeader>
-				{props.fields.map((index,field) => {
+				{props.fields.map((field,index) => {
 					return <Chakra.Table.ColumnHeader key={index}>{field}</Chakra.Table.ColumnHeader>
 				})}
 			</TableHeader>
