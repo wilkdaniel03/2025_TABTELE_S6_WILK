@@ -1,0 +1,273 @@
+{
+	"info": {
+		"_postman_id": "11e85f95-63ce-46b7-8f1a-0f76ba0a7def",
+		"name": "bd",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19229089"
+	},
+	"item": [
+		{
+			"name": "Token generation",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"mmazur\",\n    \"password\": \"pass123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://bd.wilkdaniel.com:8081/token",
+					"protocol": "http",
+					"host": [
+						"bd",
+						"wilkdaniel",
+						"com"
+					],
+					"port": "8081",
+					"path": [
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Token authorization",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://bd.wilkdaniel.com:8081/authorize",
+					"protocol": "http",
+					"host": [
+						"bd",
+						"wilkdaniel",
+						"com"
+					],
+					"port": "8081",
+					"path": [
+						"authorize"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get vehicle",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://bd.wilkdaniel.com:8082/vehicle",
+					"protocol": "http",
+					"host": [
+						"bd",
+						"wilkdaniel",
+						"com"
+					],
+					"port": "8082",
+					"path": [
+						"vehicle"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create vehicle",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"vin\": \"a\",\n    \"registration_number\": \"b\",\n    \"current_mileage\": 123,\n    \"production_year\": 1914,\n    \"status\": \"unavailable\",\n    \"vehtype_id\": 5\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://bd.wilkdaniel.com:8082/vehicle",
+					"protocol": "http",
+					"host": [
+						"bd",
+						"wilkdaniel",
+						"com"
+					],
+					"port": "8082",
+					"path": [
+						"vehicle"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete vehicle",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://bd.wilkdaniel.com:8082/vehicle/2",
+					"protocol": "http",
+					"host": [
+						"bd",
+						"wilkdaniel",
+						"com"
+					],
+					"port": "8082",
+					"path": [
+						"vehicle",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get vehicletype",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://bd.wilkdaniel.com:8082/vehicletype",
+					"protocol": "http",
+					"host": [
+						"bd",
+						"wilkdaniel",
+						"com"
+					],
+					"port": "8082",
+					"path": [
+						"vehicletype"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create vehicletype",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"brand\": \"a\",\n    \"model\": \"b\",\n    \"segment\": \"c\",\n    \"version\": \"d\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://bd.wilkdaniel.com:8082/vehicletype",
+					"protocol": "http",
+					"host": [
+						"bd",
+						"wilkdaniel",
+						"com"
+					],
+					"port": "8082",
+					"path": [
+						"vehicletype"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete vehicletype",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://bd.wilkdaniel.com:8082/vehicletype/16",
+					"protocol": "http",
+					"host": [
+						"bd",
+						"wilkdaniel",
+						"com"
+					],
+					"port": "8082",
+					"path": [
+						"vehicletype",
+						"16"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
