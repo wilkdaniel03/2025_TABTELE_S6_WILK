@@ -103,7 +103,7 @@ def get_vehicle():
 
 
 @app.post("/vehicle")
-def post_vehicletype(req: Request, body: models.VehicleDto):
+def post_vehicle(req: Request, body: models.VehicleDto):
     role_res = requests.get("{}/role/{}".format(connection.AUTH_URL,req.state.myObject))
     if role_res.json()["role"] != "admin":
         raise HTTPException(403,"User have to be admin to access this resource")
@@ -115,6 +115,17 @@ def post_vehicletype(req: Request, body: models.VehicleDto):
             raise HTTPException(400,"Failed to insert provided vehicle")
         else:
             return {"status":200}
+
+
+@app.delete("/vehicle/{vid}")
+def delete_vehicle(req: Request, vid: int):
+    role_res = requests.get("{}/role/{}".format(connection.AUTH_URL,req.state.myObject))
+    if role_res.json()["role"] != "admin":
+        raise HTTPException(403,"User have to be admin to access this resource")
+    with connection.ENGINE.connect() as conn:
+        conn.execute(delete(models.Vehicle).where(models.Vehicle.veh_id == vid))
+        conn.commit()
+        return {"status":200}
 
 
 def load_data() -> None:

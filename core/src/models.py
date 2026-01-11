@@ -41,8 +41,8 @@ class Vehicle(Base):
     __tablename__ = "vehicle"
 
     veh_id = Column(Integer,primary_key=True,autoincrement=True,nullable=False) 
-    vin = Column(String(50),nullable=False)
-    registration_number = Column(String(50),nullable=False)
+    vin = Column(String(50),unique=True,nullable=False)
+    registration_number = Column(String(50),unique=True,nullable=False)
     current_mileage = Column(Integer,nullable=False)
     production_year = Column(Integer,nullable=False)
     status = Column(String(50),nullable=False)
