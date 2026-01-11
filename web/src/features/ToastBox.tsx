@@ -9,13 +9,6 @@ import { IoMdClose } from "react-icons/io";
 
 const ICON_SIZE: string = "28px"
 
-enum ToastIconType {
-	ERROR = 0,
-	WARNING = 1,
-	SUCCESS = 2,
-	INFORMATION = 3,
-}
-
 interface IToastIconProps {
 	type: ToastIconType;
 }
