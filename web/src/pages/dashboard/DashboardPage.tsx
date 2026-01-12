@@ -14,6 +14,22 @@ const DashboardPage = () => {
 	},[]);
 
 	useEffect(() => {
+		const ws = new WebSocket("ws://localhost:5555/");
+
+		ws.onopen = () => {
+			clear();
+			append({type:ToastIconType.SUCCESS,message:"Connected with API gateway",fixed:true});
+		};
+
+		ws.onmessage = (event) => {
+			console.log(event.data);
+		};
+
+		ws.onerror = () => {
+			clear();
+			append({type:ToastIconType.ERROR,message:"Failed to connect with API gateway",fixed:true});
+		}
+
 		if(!localStorage.getItem("token")) {
 			// TODO Should check token validity!!!
 			navigate("/");
