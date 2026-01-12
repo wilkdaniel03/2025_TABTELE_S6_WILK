@@ -2,14 +2,15 @@ import { useEffect, useMemo } from 'react';
 import { Outlet, useNavigate} from 'react-router-dom';
 import * as Chakra from '@chakra-ui/react';
 import { DashboardTabs } from "@features";
-import { useToastStore } from "@stores";
+import { useToastStore, ToastIconType } from "@stores";
 
 const DashboardPage = () => {
 	const navigate = useNavigate();
-	const { clear } = useToastStore();
+	const { clear, append } = useToastStore();
 
 	useMemo(() => {
 		clear();
+		append({type:ToastIconType.LOADING,message:"Connecting with API gateway",fixed:true})
 	},[]);
 
 	useEffect(() => {
