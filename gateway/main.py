@@ -31,7 +31,7 @@ async def handler(ws: websockets.ServerConnection):
 
 
 async def main():
-    async with websockets.serve(handler,"localhost",8081) as server:
+    async with websockets.serve(handler,"0.0.0.0",8080) as server:
         await server.serve_forever()
 
 
