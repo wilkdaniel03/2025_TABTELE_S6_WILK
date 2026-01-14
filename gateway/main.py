@@ -6,9 +6,9 @@ store: set[websockets.ServerConnection] = set()
 
 async def handle_user(ws: websockets.ServerConnection):
     store.add(ws)
-    async for msg in ws:
+    while True:
         try:
-            await ws.send("GOT IT BRO")
+            await ws.recv()
         except:
             store.remove(ws)
             break
@@ -18,11 +18,9 @@ async def handle_internal(ws: websockets.ServerConnection):
     async for msg in ws:
         try:
             for sock in store:
-                if sock == ws: continue
                 await sock.send(msg)
         except:
             break
-
 
 
 async def handler(ws: websockets.ServerConnection):
