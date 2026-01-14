@@ -1,26 +1,15 @@
 import { Table } from "@components";
 import { useState, useEffect } from "react";
 import { IVehicleResponse, IEmployeeResponse } from "@http";
+import { fetchChain, employeesFields } from "@fetchChain";
 
-const FIELDS: string[] = ["name","surname"];
-
-const fetchEmployees = async () => {
-	const res = await fetch(`http://bd.wilkdaniel.com:8082/employee`,{
-		method: "GET",
-		headers: {
-			"Authorization": `Bearer ${localStorage.getItem("token")}`,
-			"Content-Type": "application/json"
-		}
-	});
-
-	return await res.json();
-}
 
 const EmployeeTable = () => {
 	const [employees,setEmployees] = useState<string[][]>([]);
+	const chain = new fetchChain();
 
 	useEffect(() => {
-		fetchEmployees()
+		chain.fetchEmployees()
 			.then((data: IEmployeeResponse[]) => {
 				let newEmployees = [];
 				for(let val of data) {
@@ -34,7 +23,7 @@ const EmployeeTable = () => {
 			.catch(err => console.error(err));
 	},[]);
 
-	return <Table fields={FIELDS} data={employees}/>;
+	return <Table fields={employeesFields} data={employees}/>;
 }
 
 export default EmployeeTable;
