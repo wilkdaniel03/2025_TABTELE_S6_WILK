@@ -56,7 +56,7 @@ const ToastBox = () => {
 			<>
 				{createPortal(
 					<>
-						{messages.map((msg,index) => <Toast key={index} id={msg.id} type={msg.type} fixed={msg.fixed}>{msg.message}</Toast>)}
+						{messages.toReversed().map((msg,index) => <Toast key={index} id={msg.id} type={msg.type} fixed={msg.fixed}>{msg.message}</Toast>)}
 					</>,
 					container
 				)}
