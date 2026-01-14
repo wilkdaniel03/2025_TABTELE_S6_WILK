@@ -25,4 +25,4 @@ jobs:
           cd gateway
           docker build --build-arg VERSION=$(cat pyproject.toml | awk '/^version/ { print $3 }' | tr -d '\"') \
                 -t $REGISTRY_ADDR/gateway:$GATEWAY_VERSION .
-          docker push $REGISTRY_ADDR/core:$GATEWAY_VERSION
+          docker push $REGISTRY_ADDR/gateway:$GATEWAY_VERSION
