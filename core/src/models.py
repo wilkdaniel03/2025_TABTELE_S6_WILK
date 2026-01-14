@@ -69,6 +69,14 @@ class VehicleRec:
     status: str
     type: VehicleTypeRec
 
+
+@dataclass
+class EmployeeRec:
+    id: int
+    name: str
+    surname: str
+
+
 def init_db(engine: sqlalchemy.Engine) -> None:
     metadata.drop_all(engine)
     metadata.create_all(engine)

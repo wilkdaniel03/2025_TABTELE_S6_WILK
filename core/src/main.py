@@ -1,7 +1,7 @@
 import uvicorn
 from fastapi import FastAPI, Header, HTTPException, Request, Response
 from typing import Annotated, Any
-from sqlalchemy import insert, select, delete
+from sqlalchemy import insert, select, delete, text
 from dataclasses import asdict
 import connection
 import models
@@ -126,6 +126,16 @@ def delete_vehicle(req: Request, vid: int):
         conn.execute(delete(models.Vehicle).where(models.Vehicle.veh_id == vid))
         conn.commit()
         return {"status":200}
+
+
+@app.get("/employee")
+def get_employee():
+    with connection.ENGINE.connect() as conn:
+        res = conn.execute(text("SELECT user.user_id,person.name,person.surname FROM user JOIN person ON user.user_id = person.user_id JOIN role ON user.user_id = role.user_id WHERE role.name = \"agent\"")).fetchall();
+        if len(res) == 0:
+            raise HTTPException(404,"Failed to find any employees")
+        employees = [models.EmployeeRec(*x) for x in res]
+        return employees
 
 
 def load_data() -> None:
