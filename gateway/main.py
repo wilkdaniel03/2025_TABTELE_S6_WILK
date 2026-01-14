@@ -1,6 +1,41 @@
-def main():
-    print("Hello from api-gateway!")
+import websockets
+import asyncio
+
+
+store: set[websockets.ServerConnection] = set()
+
+async def handle_user(ws: websockets.ServerConnection):
+    store.add(ws)
+    async for msg in ws:
+        try:
+            await ws.send("GOT IT BRO")
+        except:
+            store.remove(ws)
+            break
+
+
+async def handle_internal(ws: websockets.ServerConnection):
+    async for msg in ws:
+        try:
+            for sock in store:
+                if sock == ws: continue
+                await sock.send(msg)
+        except:
+            break
+
+
+
+async def handler(ws: websockets.ServerConnection):
+    if ws.request is not None:
+        match ws.request.path:
+            case "/user": await handle_user(ws)
+            case "/internal": await handle_internal(ws)
+
+
+async def main():
+    async with websockets.serve(handler,"localhost",8081) as server:
+        await server.serve_forever()
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
