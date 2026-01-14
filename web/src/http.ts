@@ -23,3 +23,9 @@ export interface IVehicleResponse {
 	status: string;
 	type: IVehicleTypeResponse;
 }
+
+export interface IEmployeeResponse {
+	id: number;
+	name: string;
+	surname: string;
+}
