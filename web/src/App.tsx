@@ -13,34 +13,37 @@ import {
     DashboardPage
 } from '@pages/dashboard';
 import { ToastBox } from "@features";
+import { WebsocketProvider } from "@websocket";
 
 function App() {
     return (
         <ChakraProvider value={defaultSystem}>
-			<ToastBox/>
-            <Router>
-                <Routes>
+			<WebsocketProvider>
+				<ToastBox/>
+				<Router>
+					<Routes>
 
-                    <Route path="auth/login" element={<Login />} />
-                    <Route path="auth/register" element={<Register />} />
-                    <Route path="auth/forgot" element={<ForgotPassword />} />
+						<Route path="auth/login" element={<Login />} />
+						<Route path="auth/register" element={<Register />} />
+						<Route path="auth/forgot" element={<ForgotPassword />} />
 
-					<Route path="dashboard" element={<DashboardPage/> }>
-						<Route path="">
-							<Route path="" element={<Navigate to="/dashboard/reservations" replace={true} />} />
-							<Route path="reservations" element={<ReservationsPage />} />
-							<Route path="employees" element={<EmployeesPage />} />
-							<Route path="vehicles" element={<VehiclesPage />} />
-							<Route path="settings" element={<SettingsPage />} />
+						<Route path="dashboard" element={<DashboardPage/> }>
+							<Route path="">
+								<Route path="" element={<Navigate to="/dashboard/reservations" replace={true} />} />
+								<Route path="reservations" element={<ReservationsPage />} />
+								<Route path="employees" element={<EmployeesPage />} />
+								<Route path="vehicles" element={<VehiclesPage />} />
+								<Route path="settings" element={<SettingsPage />} />
+							</Route>
+							<Route path="notifications" element={<NotificationsPage />} />
+							<Route path="*" element={<Navigate to="/dashboard/reservations" replace={true} />} />
 						</Route>
-						<Route path="notifications" element={<NotificationsPage />} />
-						<Route path="*" element={<Navigate to="/dashboard/reservations" replace={true} />} />
-					</Route>
 
-                    <Route path="auth/*" element={<Navigate to="/auth/login" replace={true}/>} />
-                    <Route path="*" element={<Navigate to="/auth/login" replace={true}/>} />
-                </Routes>
-            </Router>
+						<Route path="auth/*" element={<Navigate to="/auth/login" replace={true}/>} />
+						<Route path="*" element={<Navigate to="/auth/login" replace={true}/>} />
+					</Routes>
+				</Router>
+			</WebsocketProvider>
         </ChakraProvider>
     );
 }

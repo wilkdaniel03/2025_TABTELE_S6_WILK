@@ -1,12 +1,14 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useContext } from 'react';
 import { Outlet, useNavigate} from 'react-router-dom';
 import * as Chakra from '@chakra-ui/react';
 import { DashboardTabs } from "@features";
 import { useToastStore, ToastIconType } from "@stores";
+import { WebsocketCtx } from "@websocket";
 
 const DashboardPage = () => {
 	const navigate = useNavigate();
 	const { clear, append } = useToastStore();
+	const [ws,setWs] = useContext(WebsocketCtx)!;
 
 	useMemo(() => {
 		clear();
@@ -14,26 +16,11 @@ const DashboardPage = () => {
 	},[]);
 
 	useEffect(() => {
-		const ws = new WebSocket("ws://localhost:5555/");
-
-		ws.onopen = () => {
-			clear();
-			append({type:ToastIconType.SUCCESS,message:"Connected with API gateway",fixed:true});
-		};
-
-		ws.onmessage = (event) => {
-			console.log(event.data);
-		};
-
-		ws.onerror = () => {
-			clear();
-			append({type:ToastIconType.ERROR,message:"Failed to connect with API gateway",fixed:true});
-		}
-
 		if(!localStorage.getItem("token")) {
 			// TODO Should check token validity!!!
 			navigate("/");
 		}
+		setWs({ready:ws.ready,msg_tx:"SIEMA",msg_rx:ws.msg_rx});
 	},[]);
 
 	return (

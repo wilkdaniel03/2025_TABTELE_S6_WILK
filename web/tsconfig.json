@@ -21,7 +21,8 @@
 			"@features": ["./features"],
 			"@http": ["./http.ts"],
 			"@stores/*": ["./stores/*"],
-			"@stores": ["./stores"]
+			"@stores": ["./stores"],
+			"@websocket": ["./websocket.tsx"]
 		}
 	},
 	"include": ["./src/**/*.ts","./src/**/*.tsx","./assets/*"],
