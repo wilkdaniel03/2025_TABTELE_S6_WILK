@@ -2,5 +2,6 @@
 	"frontend": "1.0",
 	"admin-ui": "1.0",
 	"auth": "1.0",
-	"core": "1.0"
+	"core": "1.0",
+	"gateway": "1.0"
 }
