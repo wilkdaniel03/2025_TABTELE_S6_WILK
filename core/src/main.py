@@ -141,9 +141,11 @@ def get_employee():
 def load_data() -> None:
     vehicle_type_data = loader.load_csv("vehicletype.csv")
     vehicle_data = loader.load_csv("vehicle.csv")
+    reservation_data = loader.load_csv("reservation.csv")
     with connection.ENGINE.connect() as conn:
         conn.execute(insert(models.VehicleType).values(vehicle_type_data))
         conn.execute(insert(models.Vehicle).values(vehicle_data))
+        conn.execute(insert(models.Reservation).values(reservation_data))
         conn.commit()
 
 

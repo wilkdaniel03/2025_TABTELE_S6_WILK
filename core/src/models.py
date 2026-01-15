@@ -86,11 +86,25 @@ class Reservation(Base):
     start_mileage = Column(Integer,nullable=False)
     end_mileage = Column(Integer,nullable=False)
     comments = Column(String(50),nullable=False)
-    reservation_date = Column(DateTime,nullable=False)
-    planned_departure = Column(DateTime,nullable=False)
-    planned_arrival = Column(DateTime,nullable=False)
+    reservation_date = Column(String(50),nullable=False)
+    planned_departure = Column(String(50),nullable=False)
+    planned_arrival = Column(String(50),nullable=False)
     employee_id = Column(Integer,nullable=False)
     vehicle_id = Column(Integer,ForeignKey(Vehicle.veh_id),nullable=False)
+
+
+@dataclass
+class ReservationDto:
+    trip_type: str
+    status: str
+    start_mileage: int
+    end_mileage: int
+    comments: str
+    reservation_date: str
+    planned_departure: str
+    planned_arrival: str
+    employee_id: int
+    vehicle_id: int
 
 
 @dataclass

@@ -1,4 +1,4 @@
-from models import VehicleTypeDto, VehicleDto
+from models import VehicleTypeDto, VehicleDto, ReservationDto
 import csv
 from typing import Any
 from dataclasses import asdict
@@ -10,6 +10,7 @@ def get_dto_type(name: str) -> Any:
     match name:
         case 'vehicletype': Type = VehicleTypeDto
         case 'vehicle': Type = VehicleDto
+        case 'reservation': Type = ReservationDto
     return Type
 
 # read csv file and insert data into database
