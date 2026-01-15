@@ -1,0 +1,11 @@
+trip_type,status,start_mileage,end_mileage,comments,reservation_date,planned_departure,planned_arrival,employee_id,vehicle_id
+Business,Approved,12000,12045,Client meeting,2026-01-10 09:00:00,2026-01-12 08:00:00,2026-01-12 09:15:00,18,5
+Personal,Pending,45200,45230,Personal errand,2026-01-11 10:30:00,2026-01-13 14:00:00,2026-01-13 14:45:00,22,12
+Business,Completed,30500,30620,Site inspection,2026-01-08 15:00:00,2026-01-09 07:30:00,2026-01-09 10:00:00,30,20
+Maintenance,Approved,8800,8855,Service visit,2026-01-09 08:45:00,2026-01-10 09:00:00,2026-01-10 10:30:00,16,3
+Business,Cancelled,15000,15000,Trip cancelled,2026-01-07 11:00:00,2026-01-08 08:00:00,2026-01-08 08:00:00,25,9
+Training,Approved,22000,22110,Training session,2026-01-12 13:15:00,2026-01-14 09:00:00,2026-01-14 11:00:00,35,17
+Business,Completed,67000,67140,Regional visit,2026-01-06 16:30:00,2026-01-07 06:45:00,2026-01-07 09:30:00,40,42
+Personal,Approved,9900,9950,Doctor appointment,2026-01-10 17:00:00,2026-01-11 10:00:00,2026-01-11 11:00:00,19,6
+Business,Pending,41000,41180,Project discussion,2026-01-13 09:45:00,2026-01-15 08:30:00,2026-01-15 10:15:00,28,33
+Delivery,Completed,5600,5685,Equipment delivery,2026-01-05 14:20:00,2026-01-06 07:00:00,2026-01-06 08:40:00,21,14
