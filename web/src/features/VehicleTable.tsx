@@ -1,26 +1,16 @@
 import { Table } from "@components";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { IVehicleResponse } from "@http";
-
-const FIELDS: string[] = ["brand","model","vin","registration_number","production_year","current_mileage","status"];
-
-const fetchVehicles = async () => {
-	const res = await fetch(`http://bd.wilkdaniel.com:8082/vehicle`,{
-		method: "GET",
-		headers: {
-			"Authorization": `Bearer ${localStorage.getItem("token")}`,
-			"Content-Type": "application/json"
-		}
-	});
-
-	return await res.json();
-}
+import { fetchChain, vehiclesFields } from "@fetchChain";
+import { TriggerCtx } from "@trigger";
 
 const VehicleTable = () => {
 	const [vehicles,setVehicles] = useState<string[][]>([]);
+	const [trigger] = useContext(TriggerCtx)!;
+	const chain = new fetchChain();
 
 	useEffect(() => {
-		fetchVehicles()
+		chain.fetchVehicles()
 			.then((data: IVehicleResponse[]) => {
 				let newVehicles = [];
 				for(let val of data) {
@@ -37,9 +27,9 @@ const VehicleTable = () => {
 				setVehicles(newVehicles);
 			})
 			.catch(err => console.error(err));
-	},[]);
+	},[trigger.vehicle]);
 
-	return <Table fields={FIELDS} data={vehicles}/>;
+	return <Table fields={vehiclesFields} data={vehicles}/>;
 }
 
 export default VehicleTable;

@@ -10,6 +10,9 @@ aliases["@components"] = path.join(abs_path,"src","components");
 aliases["@pages"] = path.join(abs_path,"src","pages");
 aliases["@http"] = path.join(abs_path,"src","http.ts");
 aliases["@stores"] = path.join(abs_path,"src","stores");
+aliases["@websocket"] = path.join(abs_path,"src","websocket.tsx");
+aliases["@fetchChain"] = path.join(abs_path,"src","fetchChain.ts");
+aliases["@trigger"] = path.join(abs_path,"src","triggerCtx.tsx");
 
 module.exports = {
 	mode: MODE,

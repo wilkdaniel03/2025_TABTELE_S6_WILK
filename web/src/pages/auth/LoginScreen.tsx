@@ -59,7 +59,7 @@ const Login = () => {
 				setButtonState(LoadingButtonState.INACTIVE);
 			}).catch(err => {
 				setError(err.message);
-				append({type:ToastIconType.ERROR,message:err.message});
+				append({type:ToastIconType.ERROR,message:err.message,fixed:false});
 				setButtonState(LoadingButtonState.INACTIVE);
 			});
 		setClick(false);

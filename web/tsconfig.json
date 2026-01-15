@@ -21,7 +21,10 @@
 			"@features": ["./features"],
 			"@http": ["./http.ts"],
 			"@stores/*": ["./stores/*"],
-			"@stores": ["./stores"]
+			"@stores": ["./stores"],
+			"@websocket": ["./websocket.tsx"],
+			"@fetchChain": ["./fetchChain.ts"],
+			"@trigger": ["./triggerCtx.tsx"],
 		}
 	},
 	"include": ["./src/**/*.ts","./src/**/*.tsx","./assets/*"],

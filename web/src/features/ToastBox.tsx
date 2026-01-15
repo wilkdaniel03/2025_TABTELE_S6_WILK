@@ -20,6 +20,7 @@ const ToastIcon = (props: IToastIconProps) => {
 		case ToastIconType.WARNING: return <BiError size={ICON_SIZE} style={{color:"#eab308"}}/>;
 		case ToastIconType.SUCCESS: return <MdDone size={ICON_SIZE} style={{color:"#22c55e"}}/>;
 		case ToastIconType.INFORMATION: return <IoMdInformationCircleOutline size={ICON_SIZE} style={{color:"#3b82f6"}}/>;
+		case ToastIconType.LOADING: return <Chakra.Spinner size="sm"/>;
 	}
 }
 
@@ -27,6 +28,7 @@ interface IToastProps {
 	id: number;
 	type: ToastIconType;
 	children: ReactNode;
+	fixed: boolean;
 }
 
 const Toast = (props: IToastProps) => {
@@ -34,7 +36,7 @@ const Toast = (props: IToastProps) => {
 
 	return (
 		<Chakra.Card.Root mb="10px" mr="10px" px="10px">
-			<Chakra.Box onClick={() => remove(props.id)} _hover={{cursor:"pointer"}} position="absolute" right="0" top="0" mt="5px" mr="5px"><IoMdClose size="20px"/></Chakra.Box>
+			{!props.fixed ? <Chakra.Box onClick={() => remove(props.id)} _hover={{cursor:"pointer"}} position="absolute" right="0" top="0" mt="5px" mr="5px"><IoMdClose size="20px"/></Chakra.Box> : <></>}
 			<Chakra.Flex alignItems="center">
 				<ToastIcon type={props.type}/>
 				<Chakra.Card.Body>
@@ -54,7 +56,7 @@ const ToastBox = () => {
 			<>
 				{createPortal(
 					<>
-						{messages.map((msg,index) => <Toast key={index} id={msg.id} type={msg.type}>{msg.message}</Toast>)}
+						{messages.toReversed().map((msg,index) => <Toast key={index} id={msg.id} type={msg.type} fixed={msg.fixed}>{msg.message}</Toast>)}
 					</>,
 					container
 				)}
