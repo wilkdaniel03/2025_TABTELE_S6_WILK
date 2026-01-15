@@ -13,6 +13,7 @@ aliases["@stores"] = path.join(abs_path,"src","stores");
 aliases["@websocket"] = path.join(abs_path,"src","websocket.tsx");
 aliases["@fetchChain"] = path.join(abs_path,"src","fetchChain.ts");
 aliases["@trigger"] = path.join(abs_path,"src","triggerCtx.tsx");
+aliases["@assets"] = path.join(abs_path,"assets");
 
 module.exports = {
 	mode: MODE,
