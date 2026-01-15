@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useContext } from 'react';
 import { Outlet, useNavigate} from 'react-router-dom';
 import * as Chakra from '@chakra-ui/react';
-import { DashboardTabs } from "@features";
+import { DashboardTabs, ProfileMenu } from "@features";
 import { useToastStore, ToastIconType } from "@stores";
 import { Avatar } from "@components";
 
@@ -25,7 +25,7 @@ const DashboardPage = () => {
 		<>
 			<h1>Dashboard</h1>
 			<DashboardTabs/>
-			<Avatar/>
+			<ProfileMenu/>
 			<Outlet/>
 		</>
 	);
