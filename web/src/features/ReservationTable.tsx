@@ -30,7 +30,7 @@ const ReservationsTable = () => {
 				setReservations(newVehicles);
 			})
 			.catch(err => console.error(err));
-	},[trigger.vehicle]);
+	},[trigger.reservation]);
 
 	return <Table fields={reservationsFields} data={reservations}/>;
 }

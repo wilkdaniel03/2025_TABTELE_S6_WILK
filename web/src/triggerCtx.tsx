@@ -3,10 +3,11 @@ import { useState, createContext, ReactNode } from "react";
 interface ITrigger {
 	employee: boolean;
 	vehicle: boolean;
+	reservation: boolean;
 }
 
 const useTrigger = () => {
-	return useState<ITrigger>({employee:false,vehicle:false});
+	return useState<ITrigger>({employee:false,vehicle:false,reservation:false});
 }
 
 type UseTriggerReturnType = ReturnType<typeof useTrigger>;

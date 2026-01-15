@@ -22,7 +22,7 @@ const DashboardPage = () => {
 
 	return (
 		<>
-			<h1>Dashbord</h1>
+			<h1>Dashboard</h1>
 			<DashboardTabs/>
 			<Outlet/>
 		</>
