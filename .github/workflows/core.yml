@@ -22,6 +22,8 @@ jobs:
           DB_DBNAME: ${{ secrets.DB_DBNAME }}
           AUTH_HOST: ${{ secrets.AUTH_HOST }}
           AUTH_PORT: ${{ secrets.AUTH_PORT }}
+          GATEWAY_HOST: ${{ secrets.AUTH_HOST }}
+          GATEWAY_PORT: ${{ secrets.AUTH_PORT }}
           RUNNER_ALLOW_RUNASROOT: '1'
         run: |
           export CORE_VERSION=$(cat versions.json | jq .core | tr -d '\"')
@@ -31,5 +33,5 @@ jobs:
           cd core
           docker build --build-arg VERSION=$(cat pyproject.toml | awk '/^version/ { print $3 }' | tr -d '\"') \
             --build-arg DB_HOST --build-arg DB_USER --build-arg DB_PASS --build-arg DB_DBNAME --build-arg AUTH_HOST \
-            --build-arg AUTH_PORT -t $REGISTRY_ADDR/core:$CORE_VERSION .
+            --build-arg AUTH_PORT --build-arg GATEWAY_HOST -- build-arg GATEWAY_PORT -t $REGISTRY_ADDR/core:$CORE_VERSION .
           docker push $REGISTRY_ADDR/core:$CORE_VERSION
