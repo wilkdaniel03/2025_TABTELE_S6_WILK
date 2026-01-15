@@ -5,7 +5,6 @@ const VehiclesPage = () => {
     return (
         <Box p={6}>
             <Heading mb={4}>Vehicles</Heading>
-            <Text>This is the Vehicles page placeholder.</Text>
 			<Box w="50%"><VehicleTable/></Box>
         </Box>
     );
