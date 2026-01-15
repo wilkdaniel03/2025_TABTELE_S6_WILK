@@ -29,3 +29,17 @@ export interface IEmployeeResponse {
 	name: string;
 	surname: string;
 }
+
+export interface IReservationResponse {
+	id: number;
+	trip_type: string;
+	status: string;
+	start_mileage: number;
+	end_mileage: number;
+	comments: string;
+	reservation_date: string;
+	planned_departure: string;
+	planned_arrival: string;
+	employee_name: string
+	vehicle_name: string
+}
