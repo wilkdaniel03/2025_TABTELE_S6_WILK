@@ -12,6 +12,16 @@ def get_auth_service_url():
     return "http://{}:{}".format(host,port)
 
 
+def get_gateway_url():
+    host = os.environ.get("GATEWAY_HOST")
+    port = os.environ.get("GATEWAY_PORT")
+
+    if not all([host,port]):
+        raise ValueError("Failed to load gateway's envs")
+
+    return "ws://{}:{}".format(host,port)
+
+
 def get_db_url():
     host = os.environ.get("DB_HOST")
     user = os.environ.get("DB_USER")
@@ -31,4 +41,5 @@ def get_db_url():
 
 
 AUTH_URL = get_auth_service_url()
+GATEWAY_URL = get_gateway_url()
 ENGINE = sqlalchemy.create_engine(get_db_url())
