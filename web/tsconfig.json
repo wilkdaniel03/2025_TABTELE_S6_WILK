@@ -25,6 +25,8 @@
 			"@websocket": ["./websocket.tsx"],
 			"@fetchChain": ["./fetchChain.ts"],
 			"@trigger": ["./triggerCtx.tsx"],
+			"@assets": ["../assets/*"],
+			"@assets/*": ["../assets/*"]
 		}
 	},
 	"include": ["./src/**/*.ts","./src/**/*.tsx","./assets/*"],
