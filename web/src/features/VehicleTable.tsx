@@ -1,10 +1,12 @@
 import { Table } from "@components";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { IVehicleResponse } from "@http";
 import { fetchChain, vehiclesFields } from "@fetchChain";
+import { TriggerCtx } from "@trigger";
 
 const VehicleTable = () => {
 	const [vehicles,setVehicles] = useState<string[][]>([]);
+	const [trigger] = useContext(TriggerCtx)!;
 	const chain = new fetchChain();
 
 	useEffect(() => {
@@ -25,7 +27,7 @@ const VehicleTable = () => {
 				setVehicles(newVehicles);
 			})
 			.catch(err => console.error(err));
-	},[]);
+	},[trigger.vehicle]);
 
 	return <Table fields={vehiclesFields} data={vehicles}/>;
 }

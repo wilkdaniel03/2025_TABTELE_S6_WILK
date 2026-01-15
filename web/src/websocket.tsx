@@ -1,5 +1,6 @@
-import { useState, useEffect, createContext, ReactNode } from "react";
+import { useState, useEffect, createContext, useContext, ReactNode } from "react";
 import { useToastStore, ToastIconType } from "@stores";
+import { TriggerCtx } from "@trigger";
 
 export interface IWebsocket {
 	ready: boolean;
@@ -22,6 +23,7 @@ export const WebsocketProvider = (props: IWebsocketProviderProps) => {
 	const ws = useWebsocket();
 	const [getWs,setWs] = ws;
 	const { clear, append } = useToastStore();
+	const [trigger,setTrigger] = useContext(TriggerCtx)!;
 
 	useEffect(() => {
 		const socket = new WebSocket("ws://bd.wilkdaniel.com:8083/user");
@@ -39,7 +41,15 @@ export const WebsocketProvider = (props: IWebsocketProviderProps) => {
 
 		socket.addEventListener("message",(event) => {
 			setWs({ready:getWs.ready,msg_rx:event.data});
-			append({type:ToastIconType.INFORMATION,message:`Gateway API: ${event.data}`,fixed:false});
+			const splitted = event.data.split(",");
+			if(splitted[1] === "vehicle") {
+				setTrigger({employee:trigger.employee,vehicle:!trigger.vehicle});
+				append({type:ToastIconType.INFORMATION,message:"Fetching new data from vehicle",fixed:false});
+			}
+			else if(splitted[1] === "employee") {
+				setTrigger({employee:!trigger.employee,vehicle:trigger.vehicle});
+				append({type:ToastIconType.INFORMATION,message:"Fetching new data from employee",fixed:false});
+			}
 		});
 	},[]);
 

@@ -1,11 +1,13 @@
 import { Table } from "@components";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { IVehicleResponse, IEmployeeResponse } from "@http";
 import { fetchChain, employeesFields } from "@fetchChain";
+import { TriggerCtx } from "@trigger";
 
 
 const EmployeeTable = () => {
 	const [employees,setEmployees] = useState<string[][]>([]);
+	const [trigger] = useContext(TriggerCtx)!;
 	const chain = new fetchChain();
 
 	useEffect(() => {
@@ -21,7 +23,7 @@ const EmployeeTable = () => {
 				setEmployees(newEmployees);
 			})
 			.catch(err => console.error(err));
-	},[]);
+	},[trigger.employee]);
 
 	return <Table fields={employeesFields} data={employees}/>;
 }

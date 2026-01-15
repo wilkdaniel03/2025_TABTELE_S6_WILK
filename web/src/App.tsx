@@ -19,8 +19,8 @@ import { TriggerProvider } from "@trigger";
 function App() {
     return (
         <ChakraProvider value={defaultSystem}>
-			<WebsocketProvider>
-				<TriggerProvider>
+			<TriggerProvider>
+				<WebsocketProvider>
 					<ToastBox/>
 					<Router>
 						<Routes>
@@ -45,8 +45,8 @@ function App() {
 							<Route path="*" element={<Navigate to="/auth/login" replace={true}/>} />
 						</Routes>
 					</Router>
-				</TriggerProvider>
-			</WebsocketProvider>
+				</WebsocketProvider>
+			</TriggerProvider>
         </ChakraProvider>
     );
 }
