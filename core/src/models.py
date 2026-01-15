@@ -1,5 +1,5 @@
 import sqlalchemy
-from sqlalchemy import MetaData, Column, Integer, String, UniqueConstraint
+from sqlalchemy import MetaData, Column, Integer, String, UniqueConstraint, DateTime, ForeignKey
 from sqlalchemy.orm import registry
 from dataclasses import dataclass
 
@@ -75,6 +75,37 @@ class EmployeeRec:
     id: int
     name: str
     surname: str
+
+
+class Reservation(Base):
+    __tablename__ = "reservation"
+
+    res_id = Column(Integer,primary_key=True,nullable=False,autoincrement=True)
+    trip_type = Column(String(50),nullable=False)
+    status = Column(String(50),nullable=False)
+    start_mileage = Column(Integer,nullable=False)
+    end_mileage = Column(Integer,nullable=False)
+    comments = Column(String(50),nullable=False)
+    reservation_date = Column(DateTime,nullable=False)
+    planned_departure = Column(DateTime,nullable=False)
+    planned_arrival = Column(DateTime,nullable=False)
+    employee_id = Column(Integer,nullable=False)
+    vehicle_id = Column(Integer,ForeignKey(Vehicle.veh_id),nullable=False)
+
+
+@dataclass
+class ReservationRec:
+    res_id: int
+    trip_type: str
+    status: str
+    start_mileage: int
+    end_mileage: int
+    comments: str
+    reservation_date: str
+    planned_departure: str
+    planned_arrival: str
+    employee_name: str
+    vehicle_name: str
 
 
 def init_db(engine: sqlalchemy.Engine) -> None:
