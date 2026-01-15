@@ -138,12 +138,39 @@ def get_employee():
         return employees
 
 
+@app.get("/reservation")
+def get_reservation():
+    with connection.ENGINE.connect() as conn:
+        reservation_res = conn.execute(select(models.Reservation)).fetchall()
+        if len(reservation_res) == 0:
+            raise HTTPException(404,"Failed to find any reservations")
+
+        vehicles = []
+        for i in range(len(reservation_res)):
+            vehicle_res = conn.execute(select(models.VehicleType.brand,models.VehicleType.model).select_from(models.Vehicle).join(models.VehicleType,onclause=models.Vehicle.vehtype_id == models.VehicleType.vehtype_id).where(models.Vehicle.veh_id == reservation_res[i][-1])).fetchone()
+            if vehicle_res is None:
+                raise HTTPException(404,"Failed to find given vehicle")
+            vehicles.append("{} {}".format(vehicle_res[0],vehicle_res[1]))
+
+        employees = []
+        for i in range(len(reservation_res)):
+            employee_res = conn.execute(text("SELECT person.name,person.surname FROM user JOIN person ON person.user_id = user.user_id WHERE user.user_id = {}".format(reservation_res[i][-2]))).fetchone()
+            if employee_res is None:
+                raise HTTPException(404,"Failed to find given employee")
+            employees.append("{} {}".format(employee_res[0],employee_res[1]))
+
+        res = [models.ReservationRec(*reservation_res[i][:-2],employees[i],vehicles[i]) for i in range(len(reservation_res))]
+        return res
+
+
 def load_data() -> None:
     vehicle_type_data = loader.load_csv("vehicletype.csv")
     vehicle_data = loader.load_csv("vehicle.csv")
+    reservation_data = loader.load_csv("reservation.csv")
     with connection.ENGINE.connect() as conn:
         conn.execute(insert(models.VehicleType).values(vehicle_type_data))
         conn.execute(insert(models.Vehicle).values(vehicle_data))
+        conn.execute(insert(models.Reservation).values(reservation_data))
         conn.commit()
 
 
