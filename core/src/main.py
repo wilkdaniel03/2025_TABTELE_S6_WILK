@@ -8,6 +8,7 @@ import models
 import requests
 import loader
 import json
+import websockets.sync.client as websockets
 
 
 app =  FastAPI()
@@ -75,6 +76,8 @@ def delete_vehicletype(req: Request, vid: int):
     with connection.ENGINE.connect() as conn:
         conn.execute(delete(models.VehicleType).where(models.VehicleType.vehtype_id == vid))
         conn.commit()
+        with websockets.connect("{}/internal".format(connection.GATEWAY_URL)) as conn:
+            conn.send("delete,vehicle")
         return {"status":200}
 
 
@@ -125,6 +128,8 @@ def delete_vehicle(req: Request, vid: int):
     with connection.ENGINE.connect() as conn:
         conn.execute(delete(models.Vehicle).where(models.Vehicle.veh_id == vid))
         conn.commit()
+        with websockets.connect("{}/internal".format(connection.GATEWAY_URL)) as conn:
+            conn.send("delete,vehicle")
         return {"status":200}
 
 
