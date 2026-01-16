@@ -15,12 +15,14 @@ import {
 import { ToastBox } from "@features";
 import { WebsocketProvider } from "@websocket";
 import { TriggerProvider } from "@trigger";
+import { ModalContainer } from "@components";
 
 function App() {
     return (
         <ChakraProvider value={defaultSystem}>
 			<TriggerProvider>
 				<WebsocketProvider>
+					<ModalContainer>hello</ModalContainer>
 					<ToastBox/>
 					<Router>
 						<Routes>

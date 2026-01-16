@@ -6,6 +6,7 @@ import Dropdown from "./Dropdown";
 import DropdownItem from "./DropdownItem";
 import { IFormField, ISelectOption } from "./Form";
 import Form from "./Form";
+import ModalContainer from "./ModalContainer";
 
 export {
 	LoadingButton,
@@ -15,6 +16,7 @@ export {
 	Dropdown,
 	DropdownItem,
 	Form,
+	ModalContainer,
 	IFormField,
 	ISelectOption
 }

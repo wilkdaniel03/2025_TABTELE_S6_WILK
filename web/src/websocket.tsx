@@ -43,15 +43,15 @@ export const WebsocketProvider = (props: IWebsocketProviderProps) => {
 			setWs({ready:getWs.ready,msg_rx:event.data});
 			const splitted = event.data.split(",");
 			if(splitted[1] === "vehicle") {
-				setTrigger({employee:trigger.employee,vehicle:!trigger.vehicle,reservation:trigger.reservation});
+				setTrigger({employee:trigger.employee,vehicle:!trigger.vehicle,reservation:trigger.reservation,modal:trigger.modal});
 				append({type:ToastIconType.INFORMATION,message:"Fetching new data from vehicle",fixed:false});
 			}
 			else if(splitted[1] === "employee") {
-				setTrigger({employee:!trigger.employee,vehicle:trigger.vehicle,reservation:trigger.reservation});
+				setTrigger({employee:!trigger.employee,vehicle:trigger.vehicle,reservation:trigger.reservation,modal:trigger.modal});
 				append({type:ToastIconType.INFORMATION,message:"Fetching new data from employee",fixed:false});
 			}
 			else if(splitted[1] === "reservation") {
-				setTrigger({employee:trigger.employee,vehicle:trigger.vehicle,reservation:!trigger.reservation});
+				setTrigger({employee:trigger.employee,vehicle:trigger.vehicle,reservation:!trigger.reservation,modal:trigger.modal});
 				append({type:ToastIconType.INFORMATION,message:"Fetching new data from reservation",fixed:false});
 			}
 		});

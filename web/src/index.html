@@ -4,9 +4,19 @@
 <head>
 	<title>2025_TABTELE_S6_WILK</title>
 	<meta charset="utf-8">
+	<style>
+		.shown {
+			visibility: visible;
+		}
+
+		.hidden {
+			visibility: hidden;
+		}
+	</style>
 </head>
 <body>
 	<div id="root"></div>
+	<div id="modal" class="hidden" style="position:fixed;width:100vw;height:100vh;top:0;left:0;z-index:5"></div>
 	<div id="toastbox" style="position:fixed;bottom:0;right:0;width:20%"></div>
 </body>
 </html>
