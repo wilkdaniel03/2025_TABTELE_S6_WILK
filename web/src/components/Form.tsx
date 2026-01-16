@@ -1,6 +1,5 @@
-import { useState, HTMLInputTypeAttribute } from "react";
-import { Stack, Input, Field, NativeSelect } from "@chakra-ui/react";
-import LoadingButton, { LoadingButtonState } from "./LoadingButton";
+import { useState, HTMLInputTypeAttribute, ReactNode } from "react";
+import * as Chakra from "@chakra-ui/react";
 
 export interface ISelectOption {
     value: string;
@@ -17,12 +16,13 @@ export interface IFormField {
 
 interface IFormProps {
     fields: IFormField[];
-    submitLabel: string;
+    // submitLabel: string;
     onSubmit: (data: any) => void;
-    isLoading?: boolean;
+    errors?: Record<string, string>;
+    children: (triggerSubmit: () => void) => ReactNode;
 }
 
-const Form = ({ fields, submitLabel, onSubmit, isLoading = false }: IFormProps) => {
+const Form = ({ fields, onSubmit, errors = {}, children }: IFormProps) => {
     const [formData, setFormData] = useState<Record<string, any>>({});
 
     const handleChange = (name: string, value: string) => {
@@ -32,21 +32,21 @@ const Form = ({ fields, submitLabel, onSubmit, isLoading = false }: IFormProps) 
         }));
     };
 
-    const handleClick = () => {
+    const triggerSubmit = () => {
         onSubmit(formData);
     };
 
     return (
-        <Stack gap="4">
+        <Chakra.Stack gap="4">
             {fields.map((field) => (
-                <Field.Root key={field.name}>
-                    <Field.Label fontSize="14px" fontWeight="600" mb={2}>
+                <Chakra.Field.Root key={field.name} invalid={!!errors[field.name]}>
+                    <Chakra.Field.Label fontSize="14px" fontWeight="600" mb={2}>
                         {field.label}
-                    </Field.Label>
+                    </Chakra.Field.Label>
 
                     {field.type === "select" ? (
-                        <NativeSelect.Root>
-                            <NativeSelect.Field
+                        <Chakra.NativeSelect.Root>
+                            <Chakra.NativeSelect.Field
                                 h="44px"
                                 placeholder={field.placeholder}
                                 onChange={(e) => handleChange(field.name, e.target.value)}
@@ -57,10 +57,10 @@ const Form = ({ fields, submitLabel, onSubmit, isLoading = false }: IFormProps) 
                                         {opt.label}
                                     </option>
                                 ))}
-                            </NativeSelect.Field>
-                        </NativeSelect.Root>
+                            </Chakra.NativeSelect.Field>
+                        </Chakra.NativeSelect.Root>
                     ) : (
-                        <Input
+                        <Chakra.Input
                             h="44px"
                             type={field.type}
                             placeholder={field.placeholder}
@@ -68,19 +68,19 @@ const Form = ({ fields, submitLabel, onSubmit, isLoading = false }: IFormProps) 
                             value={formData[field.name] || ""}
                         />
                     )}
-                </Field.Root>
+
+                    {errors[field.name] && (
+                        <div style={{ color: "red", fontSize: "12px", marginTop: "4px" }}>
+                            {errors[field.name]}
+                        </div>
+                    )}
+                </Chakra.Field.Root>
             ))}
 
-            <div style={{ marginTop: '10px' }}>
-                <LoadingButton
-                    color="#5B5BF7"
-                    state={isLoading ? LoadingButtonState.LOADING : LoadingButtonState.INACTIVE}
-                    click={handleClick}
-                >
-                    {submitLabel}
-                </LoadingButton>
+            <div style={{ marginTop: "10px" }}>
+                {children(triggerSubmit)}
             </div>
-        </Stack>
+        </Chakra.Stack>
     );
 };
 

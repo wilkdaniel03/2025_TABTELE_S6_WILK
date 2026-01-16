@@ -13,7 +13,11 @@ const FORM_FIELDS: IFormField[] = [
 const ProfileModal = () => {
 	return (
 		<Chakra.Box width="70%" marginLeft="auto" marginRight="auto">
-			<Form fields={FORM_FIELDS} submitLabel="Change" onSubmit={(data) => console.log(data)}/>
+			<Form fields={FORM_FIELDS} onSubmit={(data) => console.log(data)}>
+				{(handleSubmit) => <Chakra.Button onClick={handleSubmit} width="100%" fontWeight="semibold" bg="#0B84FF" color="white" _hover={{ bg: "#0A76E6" }}>
+						Change
+					</Chakra.Button>}
+			</Form>
 		</Chakra.Box>
 	);
 }

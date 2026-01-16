@@ -13,12 +13,18 @@ export default function ForgotPassword() {
     return (
         <AuthLayout title="Welcome to fleet system" subtitle="Reset password">
             <Stack>
-				<Form fields={FORM_FIELDS} submitLabel="Reset password" onSubmit={(data) => alert("Reset password")} />
-				<Chakra.Button bg="#0B84FF" fontWeight="semibold" color="white" _hover={{ bg: "#0A76E6" }}>
-					<Link to="/auth/register" style={{ width: "100%", display: "block", textAlign: "center", color: "white" }}>
-						Create new account
-					</Link>
-				</Chakra.Button>
+				<Form fields={FORM_FIELDS} onSubmit={(data) => alert("Reset password")}>
+					{(handleSubmit) => 
+						<Chakra.Button onClick={handleSubmit} width="100%" bg="#0B84FF" fontWeight="semibold" color="white" _hover={{ bg: "#0A76E6" }}>
+							Reset password
+						</Chakra.Button>
+					}
+				</Form>
+					<Chakra.Button bg="#0B84FF" fontWeight="semibold" color="white" _hover={{ bg: "#0A76E6" }}>
+						<Link to="/auth/register" style={{ width: "100%", display: "block", textAlign: "center", color: "white" }}>
+							Create new account
+						</Link>
+					</Chakra.Button>
             </Stack>
         </AuthLayout>
     );
