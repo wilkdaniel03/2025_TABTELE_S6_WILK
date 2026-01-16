@@ -1,6 +1,5 @@
-import React, { useState, HTMLInputTypeAttribute } from "react";
+import React, { useState, HTMLInputTypeAttribute, ReactNode } from "react";
 import { Stack, Input, Field, NativeSelect } from "@chakra-ui/react";
-import LoadingButton, { LoadingButtonState } from "./LoadingButton";
 
 export interface SelectOption {
     value: string;
@@ -10,19 +9,19 @@ export interface SelectOption {
 export interface FormFieldDef {
     name: string;
     label: string;
-    type: HTMLInputTypeAttribute;
+    type: HTMLInputTypeAttribute | "select";
     placeholder?: string;
     options?: SelectOption[];
 }
 
 interface FormProps {
     fields: FormFieldDef[];
-    submitLabel: string;
     onSubmit: (data: any) => void;
-    isLoading?: boolean;
+    errors?: Record<string, string>;
+    children: (triggerSubmit: () => void) => ReactNode;
 }
 
-export const Form = ({ fields, submitLabel, onSubmit, isLoading = false }: FormProps) => {
+export const Form = ({ fields, onSubmit, errors = {}, children }: FormProps) => {
     const [formData, setFormData] = useState<Record<string, any>>({});
 
     const handleChange = (name: string, value: string) => {
@@ -32,14 +31,14 @@ export const Form = ({ fields, submitLabel, onSubmit, isLoading = false }: FormP
         }));
     };
 
-    const handleClick = () => {
+    const triggerSubmit = () => {
         onSubmit(formData);
     };
 
     return (
         <Stack gap="4">
             {fields.map((field) => (
-                <Field.Root key={field.name}>
+                <Field.Root key={field.name} invalid={!!errors[field.name]}>
                     <Field.Label fontSize="14px" fontWeight="600" mb={2}>
                         {field.label}
                     </Field.Label>
@@ -68,17 +67,17 @@ export const Form = ({ fields, submitLabel, onSubmit, isLoading = false }: FormP
                             value={formData[field.name] || ""}
                         />
                     )}
+
+                    {errors[field.name] && (
+                        <div style={{ color: "red", fontSize: "12px", marginTop: "4px" }}>
+                            {errors[field.name]}
+                        </div>
+                    )}
                 </Field.Root>
             ))}
 
-            <div style={{ marginTop: '10px' }}>
-                <LoadingButton
-                    color="#5B5BF7"
-                    state={isLoading ? LoadingButtonState.LOADING : LoadingButtonState.INACTIVE}
-                    click={handleClick}
-                >
-                    {submitLabel}
-                </LoadingButton>
+            <div style={{ marginTop: "10px" }}>
+                {children(triggerSubmit)}
             </div>
         </Stack>
     );
