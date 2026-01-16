@@ -2,4 +2,4 @@
 *lock
 __pycache__/
 dist/
-auth.egg*/
+shared.egg*/
