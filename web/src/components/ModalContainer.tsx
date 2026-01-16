@@ -31,7 +31,7 @@ const ModalContainer = (props: IModalContainerProps) => {
 	},[trigger.modal]);
 
 	if(el) return createPortal(
-		shown ? <><Chakra.Box position="absolute" top="50%" left="50%" translate="-50% -50%" width="50%" bg="gray.200" padding="10px 5px" borderRadius="10px" zIndex="6">{props.children}</Chakra.Box><Backdrop onClick={() => { setShown(false); el?.classList.remove("shown"); el?.classList.add("hidden"); }}/></> : <></>,
+		shown ? <><Chakra.Box position="absolute" top="50%" left="50%" translate="-50% -50%" width="50%" bg="white" padding="10px 5px" borderRadius="10px" zIndex="6">{props.children}</Chakra.Box><Backdrop onClick={() => { setShown(false); el?.classList.remove("shown"); el?.classList.add("hidden"); }}/></> : <></>,
 		el
 	);
 		
