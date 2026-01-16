@@ -1,5 +1,5 @@
 import { Stack } from "@chakra-ui/react";
-import AuthLayout from "@components/auth/AuthLayout";
+import { AuthLayout } from "@components/auth";
 import { Form, IFormField } from "@components";
 
 const FORM_FIELDS: IFormField[] = [
