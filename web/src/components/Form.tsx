@@ -1,28 +1,28 @@
-import React, { useState, HTMLInputTypeAttribute } from "react";
+import { useState, HTMLInputTypeAttribute } from "react";
 import { Stack, Input, Field, NativeSelect } from "@chakra-ui/react";
 import LoadingButton, { LoadingButtonState } from "./LoadingButton";
 
-export interface SelectOption {
+export interface ISelectOption {
     value: string;
     label: string;
 }
 
-export interface FormFieldDef {
+export interface IFormField {
     name: string;
     label: string;
     type: HTMLInputTypeAttribute;
     placeholder?: string;
-    options?: SelectOption[];
+    options?: ISelectOption[];
 }
 
-interface FormProps {
-    fields: FormFieldDef[];
+interface IFormProps {
+    fields: IFormField[];
     submitLabel: string;
     onSubmit: (data: any) => void;
     isLoading?: boolean;
 }
 
-export const Form = ({ fields, submitLabel, onSubmit, isLoading = false }: FormProps) => {
+const Form = ({ fields, submitLabel, onSubmit, isLoading = false }: IFormProps) => {
     const [formData, setFormData] = useState<Record<string, any>>({});
 
     const handleChange = (name: string, value: string) => {
