@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS reservation (
 	start_mileage INT NOT NULL,
 	end_mileage INT NOT NULL,
 	comments VARCHAR(50) NOT NULL,
-	reservaton_date VARCHAR(50) NOT NULL,
+	reservation_date VARCHAR(50) NOT NULL,
 	planned_departure VARCHAR(50) NOT NULL,
 	planned_arrival VARCHAR(50) NOT NULL,
 	employee_id INT NOT NULL,
@@ -63,3 +63,45 @@ CREATE TABLE IF NOT EXISTS reservation (
 	FOREIGN KEY (employee_id) REFERENCES user (user_id) ON UPDATE CASCADE ON DELETE CASCADE,
 	FOREIGN KEY (vehicle_id) REFERENCES vehicle (veh_id) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE = INNODB;
+
+LOAD DATA INFILE '/etc/mysql/user.csv'
+	INTO TABLE user
+	FIELDS TERMINATED BY ',' ENCLOSED BY '"'
+	LINES TERMINATED BY '\n'
+	IGNORE 1 ROWS
+	(username,password,last_login,is_active);
+
+LOAD DATA INFILE '/etc/mysql/person.csv'
+	INTO TABLE person
+	FIELDS TERMINATED BY ',' ENCLOSED BY '"'
+	LINES TERMINATED BY '\n'
+	IGNORE 1 ROWS
+	(name,surname,date_of_birth,phone_number,pesel,nationality,user_id);
+
+LOAD DATA INFILE '/etc/mysql/role.csv'
+	INTO TABLE role
+	FIELDS TERMINATED BY ',' ENCLOSED BY '"'
+	LINES TERMINATED BY '\n'
+	IGNORE 1 ROWS
+	(name,user_id);
+
+LOAD DATA INFILE '/etc/mysql/vehicletype.csv'
+	INTO TABLE vehicle_type
+	FIELDS TERMINATED BY ',' ENCLOSED BY '"'
+	LINES TERMINATED BY '\n'
+	IGNORE 1 ROWS
+	(brand,model,version,segment);
+
+LOAD DATA INFILE '/etc/mysql/vehicle.csv'
+	INTO TABLE vehicle
+	FIELDS TERMINATED BY ',' ENCLOSED BY '"'
+	LINES TERMINATED BY '\n'
+	IGNORE 1 ROWS
+	(vin,registration_number,current_mileage,production_year,status,vehtype_id);
+
+LOAD DATA INFILE '/etc/mysql/reservation.csv'
+	INTO TABLE reservation
+	FIELDS TERMINATED BY ',' ENCLOSED BY '"'
+	LINES TERMINATED BY '\n'
+	IGNORE 1 ROWS
+	(trip_type,status,start_mileage,end_mileage,comments,reservation_date,planned_departure,planned_arrival,employee_id,vehicle_id);
