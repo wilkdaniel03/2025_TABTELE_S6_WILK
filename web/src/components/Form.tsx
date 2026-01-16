@@ -10,7 +10,7 @@ export interface ISelectOption {
 export interface IFormField {
     name: string;
     label: string;
-    type: HTMLInputTypeAttribute;
+    type: HTMLInputTypeAttribute | "select";
     placeholder?: string;
     options?: ISelectOption[];
 }
