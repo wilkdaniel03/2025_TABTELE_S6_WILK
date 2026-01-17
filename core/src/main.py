@@ -4,9 +4,8 @@ from typing import Annotated, Any
 from sqlalchemy import insert, select, delete, text
 from dataclasses import asdict
 import connection
-import models
+import shared.models as models
 import requests
-import loader
 import json
 import websockets.sync.client as websockets
 
@@ -168,18 +167,5 @@ def get_reservation():
         return res
 
 
-def load_data() -> None:
-    vehicle_type_data = loader.load_csv("vehicletype.csv")
-    vehicle_data = loader.load_csv("vehicle.csv")
-    reservation_data = loader.load_csv("reservation.csv")
-    with connection.ENGINE.connect() as conn:
-        conn.execute(insert(models.VehicleType).values(vehicle_type_data))
-        conn.execute(insert(models.Vehicle).values(vehicle_data))
-        conn.execute(insert(models.Reservation).values(reservation_data))
-        conn.commit()
-
-
 if __name__ == "__main__":
-    models.init_db(connection.ENGINE)
-    load_data()
     uvicorn.run("main:app",port=8080,host="0.0.0.0")
