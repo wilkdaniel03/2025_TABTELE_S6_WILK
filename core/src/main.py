@@ -1,15 +1,19 @@
 import uvicorn
 from fastapi import FastAPI, Header, HTTPException, Request, Response
 from typing import Annotated, Any
+import sqlalchemy
 from sqlalchemy import insert, select, delete, text
 from dataclasses import asdict
-import connection
-import models
+import shared.models as models
+import shared.connection as connection
 import requests
-import loader
 import json
 import websockets.sync.client as websockets
 
+
+ENGINE = sqlalchemy.create_engine(connection.get_db_url())
+AUTH_URL = connection.get_auth_service_url()
+GATEWAY_URL = connection.get_gateway_url()
 
 app =  FastAPI()
 
@@ -34,7 +38,7 @@ async def token_verification(req: Request, next):
     headers = {
         "Authorization": "Bearer {}".format(token_header_splitted[TOKEN_VAL_IDX])
     }
-    auth_res = requests.get("{}/authorize".format(connection.AUTH_URL),headers=headers)
+    auth_res = requests.get("{}/authorize".format(AUTH_URL),headers=headers)
     if not auth_res.ok:
         return Response(status_code=auth_res.status_code,headers=auth_res.headers,content=auth_res.content)
 
@@ -44,7 +48,7 @@ async def token_verification(req: Request, next):
 
 @app.get("/vehicletype")
 def get_vehicletype():
-    with connection.ENGINE.connect() as conn:
+    with ENGINE.connect() as conn:
         sel = select(models.VehicleType)
         res = conn.execute(sel).fetchall()
         if len(res) == 0:
@@ -55,10 +59,10 @@ def get_vehicletype():
 
 @app.post("/vehicletype")
 def post_vehicletype(req: Request, body: models.VehicleTypeDto):
-    role_res = requests.get("{}/role/{}".format(connection.AUTH_URL,req.state.myObject))
+    role_res = requests.get("{}/role/{}".format(AUTH_URL,req.state.myObject))
     if role_res.json()["role"] != "admin":
         raise HTTPException(403,"User have to be admin to access this resource")
-    with connection.ENGINE.connect() as conn:
+    with ENGINE.connect() as conn:
         try:
             conn.execute(insert(models.VehicleType).values(asdict(body)))
             conn.commit()
@@ -70,20 +74,20 @@ def post_vehicletype(req: Request, body: models.VehicleTypeDto):
 
 @app.delete("/vehicletype/{vid}")
 def delete_vehicletype(req: Request, vid: int):
-    role_res = requests.get("{}/role/{}".format(connection.AUTH_URL,req.state.myObject))
+    role_res = requests.get("{}/role/{}".format(AUTH_URL,req.state.myObject))
     if role_res.json()["role"] != "admin":
         raise HTTPException(403,"User have to be admin to access this resource")
-    with connection.ENGINE.connect() as conn:
+    with ENGINE.connect() as conn:
         conn.execute(delete(models.VehicleType).where(models.VehicleType.vehtype_id == vid))
         conn.commit()
-        with websockets.connect("{}/internal".format(connection.GATEWAY_URL)) as conn:
+        with websockets.connect("{}/internal".format(GATEWAY_URL)) as conn:
             conn.send("delete,vehicle")
         return {"status":200}
 
 
 @app.get("/vehicle")
 def get_vehicle():
-    with connection.ENGINE.connect() as conn:
+    with ENGINE.connect() as conn:
         sel = select(models.Vehicle)
         vehicle_res = conn.execute(sel).fetchall()
         if len(vehicle_res) == 0:
@@ -107,10 +111,10 @@ def get_vehicle():
 
 @app.post("/vehicle")
 def post_vehicle(req: Request, body: models.VehicleDto):
-    role_res = requests.get("{}/role/{}".format(connection.AUTH_URL,req.state.myObject))
+    role_res = requests.get("{}/role/{}".format(AUTH_URL,req.state.myObject))
     if role_res.json()["role"] != "admin":
         raise HTTPException(403,"User have to be admin to access this resource")
-    with connection.ENGINE.connect() as conn:
+    with ENGINE.connect() as conn:
         try:
             conn.execute(insert(models.Vehicle).values(asdict(body)))
             conn.commit()
@@ -122,20 +126,20 @@ def post_vehicle(req: Request, body: models.VehicleDto):
 
 @app.delete("/vehicle/{vid}")
 def delete_vehicle(req: Request, vid: int):
-    role_res = requests.get("{}/role/{}".format(connection.AUTH_URL,req.state.myObject))
+    role_res = requests.get("{}/role/{}".format(AUTH_URL,req.state.myObject))
     if role_res.json()["role"] != "admin":
         raise HTTPException(403,"User have to be admin to access this resource")
-    with connection.ENGINE.connect() as conn:
+    with ENGINE.connect() as conn:
         conn.execute(delete(models.Vehicle).where(models.Vehicle.veh_id == vid))
         conn.commit()
-        with websockets.connect("{}/internal".format(connection.GATEWAY_URL)) as conn:
+        with websockets.connect("{}/internal".format(GATEWAY_URL)) as conn:
             conn.send("delete,vehicle")
         return {"status":200}
 
 
 @app.get("/employee")
 def get_employee():
-    with connection.ENGINE.connect() as conn:
+    with ENGINE.connect() as conn:
         res = conn.execute(text("SELECT user.user_id,person.name,person.surname FROM user JOIN person ON user.user_id = person.user_id JOIN role ON user.user_id = role.user_id WHERE role.name = \"agent\"")).fetchall();
         if len(res) == 0:
             raise HTTPException(404,"Failed to find any employees")
@@ -145,7 +149,7 @@ def get_employee():
 
 @app.get("/reservation")
 def get_reservation():
-    with connection.ENGINE.connect() as conn:
+    with ENGINE.connect() as conn:
         reservation_res = conn.execute(select(models.Reservation)).fetchall()
         if len(reservation_res) == 0:
             raise HTTPException(404,"Failed to find any reservations")
@@ -168,18 +172,5 @@ def get_reservation():
         return res
 
 
-def load_data() -> None:
-    vehicle_type_data = loader.load_csv("vehicletype.csv")
-    vehicle_data = loader.load_csv("vehicle.csv")
-    reservation_data = loader.load_csv("reservation.csv")
-    with connection.ENGINE.connect() as conn:
-        conn.execute(insert(models.VehicleType).values(vehicle_type_data))
-        conn.execute(insert(models.Vehicle).values(vehicle_data))
-        conn.execute(insert(models.Reservation).values(reservation_data))
-        conn.commit()
-
-
 if __name__ == "__main__":
-    models.init_db(connection.ENGINE)
-    load_data()
     uvicorn.run("main:app",port=8080,host="0.0.0.0")

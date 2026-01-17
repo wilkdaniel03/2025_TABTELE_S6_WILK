@@ -2,4 +2,5 @@
 *lock
 __pycache__/
 dist/
-core.egg*/
+shared.egg*/
+build/

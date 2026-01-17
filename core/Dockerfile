@@ -1,7 +1,10 @@
 FROM astral/uv:python3.13-alpine AS UV
+WORKDIR /shared
+ADD ./shared/.python-version ./shared/pyproject.toml ./
+ADD ./shared/src ./src/
 WORKDIR /app
-ADD .python-version pyproject.toml ./
-ADD src ./src/
+ADD ./core/.python-version ./core/pyproject.toml ./
+ADD ./core/src ./src/
 RUN uv sync
 RUN uv build
 
@@ -30,6 +33,7 @@ WORKDIR /app
 COPY --from=UV /app/dist/core-$VERSION.tar.gz ./app.tar.gz
 RUN tar -xvf ./app.tar.gz
 WORKDIR /app/core-$VERSION
+COPY --from=UV /shared/src/shared ./src/shared/
 ADD *csv ./
 RUN printf 'from setuptools import setup\nsetup()\n' > setup.py
 RUN python3 -m venv .venv

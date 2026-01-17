@@ -1,6 +1,6 @@
 import websockets
 import asyncio
-
+import shared.lib as shared
 
 store: set[websockets.ServerConnection] = set()
 
@@ -36,4 +36,5 @@ async def main():
 
 
 if __name__ == "__main__":
+    print(shared.hello())
     asyncio.run(main())
