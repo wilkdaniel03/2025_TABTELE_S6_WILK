@@ -30,6 +30,16 @@ export interface IEmployeeResponse {
 	surname: string;
 }
 
+export interface IUserResponse {
+	id: number;
+	name: string;
+	surname: string;
+	date_of_birth: string;
+	phone_number: string;
+	pesel: string;
+	nationality: string;
+}
+
 export interface IReservationResponse {
 	id: number;
 	trip_type: string;

@@ -39,4 +39,16 @@ export class fetchChain {
 
 		return await res.json();
 	}
+
+	public async fetchUserInfo() : Promise<any> {
+		const res = await fetch(`${this.url}/user`,{
+			method: "GET",
+			headers: {
+				"Authorization": `Bearer ${localStorage.getItem("token")}`,
+				"Content-Type": "application/json"
+			}
+		});
+
+		return await res.json();
+	}
 }

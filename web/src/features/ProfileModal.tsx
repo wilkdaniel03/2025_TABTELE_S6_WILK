@@ -1,5 +1,8 @@
-import { Form, IFormField } from "@components";
+import { useState, useEffect } from "react";
 import * as Chakra from "@chakra-ui/react";
+import { Form, IFormField } from "@components";
+import { fetchChain } from "@fetchChain";
+import { IUserResponse } from "@http";
 
 const FORM_FIELDS: IFormField[] = [
 	{ name: "name", label: "Name", type: "text" },
@@ -11,6 +14,25 @@ const FORM_FIELDS: IFormField[] = [
 ];
 
 const ProfileModal = () => {
+	const fetch = new fetchChain();
+	const [userInfo,setUserData] = useState<IUserResponse>({
+		id: 0,
+		name: "",
+		surname: "",
+		date_of_birth: "",
+		phone_number: "",
+		pesel: "",
+		nationality: ""
+	});
+
+	useEffect(() => {
+		fetch.fetchUserInfo()
+			.then((data: IUserResponse) => {
+				setUserData(data);
+			})
+			.catch((err) => console.error(err));
+	},[]);
+
 	return (
 		<Chakra.Box width="70%" marginLeft="auto" marginRight="auto">
 			<Form fields={FORM_FIELDS} onSubmit={(data) => console.log(data)}>
