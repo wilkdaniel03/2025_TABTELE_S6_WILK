@@ -1,8 +1,8 @@
 import uvicorn
 from fastapi import FastAPI, Header, HTTPException, Request, Response
-from typing import Annotated, Any
+from typing import Annotated, Any, Dict, Union
 import sqlalchemy
-from sqlalchemy import insert, select, delete
+from sqlalchemy import insert, select, delete, update
 from dataclasses import asdict
 import shared.models as models
 import shared.connection as connection
@@ -178,13 +178,30 @@ def get_reservation():
 def get_user_by_id(req: Request):
     user_id = req.state.myObject
     with ENGINE.connect() as conn:
-        sql = select(models.User.user_id,models.Person.name,models.Person.surname,models.Person.date_of_birth,models.Person.phone_number,models.Person.pesel,models.Person.nationality).select_from(models.User).join(models.Person,onclause = models.User.user_id == models.Person.user_id).where(models.User.user_id == user_id)
+        sql_fields = (models.User.user_id,models.Person.name,models.Person.surname,models.Person.date_of_birth,models.Person.phone_number,models.Person.pesel,models.Person.nationality)
+        sql = select(*sql_fields).select_from(models.User).join(models.Person,onclause = models.User.user_id == models.Person.user_id).where(models.User.user_id == user_id)
         res = conn.execute(sql).fetchone()
         if res is None:
             raise HTTPException(404,"Failed to find user with given id")
         user = models.UserRec(*res)
         return user
 
+
+@app.post("/user")
+def update_user_by_id(req: Request, body: Dict[str,Union[str,int]]):
+    user_id = req.state.myObject
+    for k in body.keys():
+        if k not in models.UserRec.__dict__["__dataclass_fields__"].keys():
+            raise HTTPException(400,"Cannot use provided {} field".format(k))
+        elif k == "user_id":
+            raise HTTPException(400,"Cannot use user_id field".format(k))
+
+    with ENGINE.connect() as conn:
+        sql = update(models.Person).where(models.Person.user_id == user_id).values(**body)
+        conn.execute(sql)
+        conn.commit()
+
+    return {"status":200}
 
 if __name__ == "__main__":
     uvicorn.run("main:app",port=8080,host="0.0.0.0")
