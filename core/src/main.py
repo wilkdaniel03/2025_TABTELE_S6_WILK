@@ -1,8 +1,8 @@
 import uvicorn
 from fastapi import FastAPI, Header, HTTPException, Request, Response
-from typing import Annotated, Any
+from typing import Annotated, Any, Dict, Union
 import sqlalchemy
-from sqlalchemy import insert, select, delete
+from sqlalchemy import insert, select, delete, update
 from dataclasses import asdict
 import shared.models as models
 import shared.connection as connection
@@ -59,7 +59,8 @@ def get_vehicletype():
 
 @app.post("/vehicletype")
 def post_vehicletype(req: Request, body: models.VehicleTypeDto):
-    role_res = requests.get("{}/role/{}".format(AUTH_URL,req.state.myObject))
+    headers = {"Authorization":"Bearer {}".format(req.state.myObject)}
+    role_res = requests.get("{}/role".format(AUTH_URL),headers=headers)
     if role_res.json()["role"] != "admin":
         raise HTTPException(403,"User have to be admin to access this resource")
     with ENGINE.connect() as conn:
@@ -74,7 +75,8 @@ def post_vehicletype(req: Request, body: models.VehicleTypeDto):
 
 @app.delete("/vehicletype/{vid}")
 def delete_vehicletype(req: Request, vid: int):
-    role_res = requests.get("{}/role/{}".format(AUTH_URL,req.state.myObject))
+    headers = {"Authorization":"Bearer {}".format(req.state.myObject)}
+    role_res = requests.get("{}/role".format(AUTH_URL),headers=headers)
     if role_res.json()["role"] != "admin":
         raise HTTPException(403,"User have to be admin to access this resource")
     with ENGINE.connect() as conn:
@@ -173,6 +175,35 @@ def get_reservation():
         res = [models.ReservationRec(*reservation_res[i][:-2],employees[i],vehicles[i]) for i in range(len(reservation_res))]
         return res
 
+
+@app.get("/user")
+def get_user_by_id(req: Request):
+    user_id = req.state.myObject
+    with ENGINE.connect() as conn:
+        sql_fields = (models.User.user_id,models.Person.name,models.Person.surname,models.Person.date_of_birth,models.Person.phone_number,models.Person.pesel,models.Person.nationality)
+        sql = select(*sql_fields).select_from(models.User).join(models.Person,onclause = models.User.user_id == models.Person.user_id).where(models.User.user_id == user_id)
+        res = conn.execute(sql).fetchone()
+        if res is None:
+            raise HTTPException(404,"Failed to find user with given id")
+        user = models.UserRec(*res)
+        return user
+
+
+@app.post("/user")
+def update_user_by_id(req: Request, body: Dict[str,Union[str,int]]):
+    user_id = req.state.myObject
+    for k in body.keys():
+        if k not in models.UserRec.__dict__["__dataclass_fields__"].keys():
+            raise HTTPException(400,"Cannot use provided {} field".format(k))
+        elif k == "user_id":
+            raise HTTPException(400,"Cannot use user_id field".format(k))
+
+    with ENGINE.connect() as conn:
+        sql = update(models.Person).where(models.Person.user_id == user_id).values(**body)
+        conn.execute(sql)
+        conn.commit()
+
+    return {"status":200}
 
 if __name__ == "__main__":
     uvicorn.run("main:app",port=8080,host="0.0.0.0")

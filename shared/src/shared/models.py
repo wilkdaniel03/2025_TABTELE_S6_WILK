@@ -71,6 +71,17 @@ class Role(Base):
 
 
 @dataclass
+class UserRec:
+    user_id: int
+    name: str
+    surname: str
+    date_of_birth: str
+    phone_number: str
+    pesel: str
+    nationality: str
+
+
+@dataclass
 class RoleDto:
     name: str
     user_id: int
