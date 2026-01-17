@@ -8,19 +8,13 @@ import time
 from typing import Annotated, Dict
 import os
 from dataclasses import dataclass, asdict
-import connection
-import models
-import loader
+import shared.models as models
+import shared.connection as connection
 
 
 secret = bytes(32)
 app = FastAPI()
 algorithm = "HS256"
-token_store: Dict[int,str] = dict()
-
-
-# Hard coded user id
-user_id: int = 1203129321
 
 
 # Two hours
@@ -57,7 +51,6 @@ def get_token(body: UserLoginDto):
         now = time.time()
         payload = { "iss": found_user_id, "sub": found_username, "iat": now, "exp": now + expiration_time }
         token = jwt.encode(payload,secret,algorithm)
-        token_store[user_id] = token
         return { "token": token }
 
 
@@ -100,15 +93,6 @@ def load_secret(path: str) -> bytes:
 
 
 if __name__ == "__main__":
-    models.init_db(connection.ENGINE)
-    with connection.ENGINE.connect() as conn:
-        user_data = loader.load_csv("user.csv")
-        conn.execute(insert(models.User).values(user_data))
-        person_data = loader.load_csv("person.csv")
-        conn.execute(insert(models.Person).values(person_data))
-        role_data = loader.load_csv("role.csv")
-        conn.execute(insert(models.Role).values(role_data))
-        conn.commit()
     os.environ.setdefault("PORT","8080")
     PORT = os.environ.get("PORT")
     if PORT is None:

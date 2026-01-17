@@ -1,7 +1,10 @@
 FROM astral/uv:python3.13-alpine AS UV
+WORKDIR /shared
+ADD ./shared/.python-version ./shared/pyproject.toml ./
+ADD ./shared/src ./src/
 WORKDIR /app
-ADD .python-version pyproject.toml ./
-ADD src ./src/
+ADD ./core/.python-version ./core/pyproject.toml ./
+ADD ./core/src ./src/
 RUN uv sync
 RUN uv build
 

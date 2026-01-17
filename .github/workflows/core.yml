@@ -30,8 +30,7 @@ jobs:
           printf '{ "insecure-registries": [ "%s" ] }' $REGISTRY_ADDR > $PWD/daemon.json
           sudo cp $PWD/daemon.json /etc/docker/daemon.json
           sudo systemctl restart docker
-          cd core
-          docker build --build-arg VERSION=$(cat pyproject.toml | awk '/^version/ { print $3 }' | tr -d '\"') \
+          docker build --build-arg VERSION=$(cat ./core/pyproject.toml | awk '/^version/ { print $3 }' | tr -d '\"') \
             --build-arg DB_HOST --build-arg DB_USER --build-arg DB_PASS --build-arg DB_DBNAME --build-arg AUTH_HOST \
-            --build-arg AUTH_PORT --build-arg GATEWAY_HOST --build-arg GATEWAY_PORT -t $REGISTRY_ADDR/core:$CORE_VERSION .
+            --build-arg AUTH_PORT --build-arg GATEWAY_HOST --build-arg GATEWAY_PORT -t $REGISTRY_ADDR/core:$CORE_VERSION -f core/Dockerfile .
           docker push $REGISTRY_ADDR/core:$CORE_VERSION
