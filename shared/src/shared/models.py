@@ -74,8 +74,3 @@ class Role(Base):
 class RoleDto:
     name: str
     user_id: int
-
-
-def init_db(engine: Engine) -> None:
-    metadata.drop_all(engine)
-    metadata.create_all(engine)
