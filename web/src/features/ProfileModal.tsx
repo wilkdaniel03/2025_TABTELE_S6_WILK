@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import * as Chakra from "@chakra-ui/react";
 import { Form, IFormField } from "@components";
 import { fetchChain } from "@fetchChain";
-import { IUserResponse } from "@http";
+import { IUserRequest, IUserResponse } from "@http";
+import { useToastStore, ToastIconType } from "@stores";
 
 const ProfileModal = () => {
 	const fetch = new fetchChain();
@@ -18,6 +19,8 @@ const ProfileModal = () => {
 			{ label: "United states", value: "usa" }
 		] }
 	]);
+
+	const { append } = useToastStore();
 
 	useEffect(() => {
 		fetch.fetchUserInfo()
@@ -39,11 +42,20 @@ const ProfileModal = () => {
 			.catch((err) => console.error(err));
 	},[]);
 
-	console.log(formFields);
+	const submitHandler = (data: IUserRequest) => {
+		fetch.updateUserInfo(data)
+			.then(res => {
+				if(res.status !== 200) {
+					append({message:res.data.detail,type:ToastIconType.ERROR,fixed:false});
+				} else {
+					append({message:"Updated user info",type:ToastIconType.SUCCESS,fixed:false});
+				}
+			});
+	};
 
 	return (
 		<Chakra.Box width="70%" marginLeft="auto" marginRight="auto">
-			<Form fields={formFields} onSubmit={(data) => console.log(data)}>
+			<Form fields={formFields} onSubmit={submitHandler}>
 				{(handleSubmit) => <Chakra.Button onClick={handleSubmit} width="100%" fontWeight="semibold" bg="#0B84FF" color="white" _hover={{ bg: "#0A76E6" }}>
 						Change
 					</Chakra.Button>}

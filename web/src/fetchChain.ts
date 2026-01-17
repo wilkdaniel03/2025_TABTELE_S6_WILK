@@ -1,3 +1,5 @@
+import { IUserRequest } from "@http";
+
 export const vehiclesFields: string [] = ["brand","model","vin","registration_number","production_year","current_mileage","status"];
 export const employeesFields: string[] = ["name","surname"];
 export const reservationsFields: string[] = ["trip_type","status","start_mileage","end_mileage","comments","reservation_date","planned_departure","planned_arrival","employee_name","vehicle_name"];
@@ -50,5 +52,18 @@ export class fetchChain {
 		});
 
 		return await res.json();
+	}
+
+	public async updateUserInfo(data: IUserRequest) : Promise<any> {
+		const res = await fetch(`${this.url}/user`,{
+			method: "POST",
+			headers: {
+				"Authorization": `Bearer ${localStorage.getItem("token")}`,
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify(data)
+		});
+
+		return { status: res.status, data: await res.json() };
 	}
 }
