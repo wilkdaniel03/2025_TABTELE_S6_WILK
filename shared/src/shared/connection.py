@@ -20,4 +20,26 @@ def get_db_url() -> sqlalchemy.URL:
     return sqlalchemy.URL.create("mysql+pymysql",user,password,host,port,dbname)
 
 
-ENGINE = sqlalchemy.create_engine(get_db_url(),echo=True)
+def get_auth_service_url():
+    host = os.environ.get("AUTH_HOST")
+    port = os.environ.get("AUTH_PORT")
+
+    if not all([host,port]):
+        raise ValueError("Failed to load auth's envs")
+
+    return "http://{}:{}".format(host,port)
+
+
+def get_gateway_url():
+    host = os.environ.get("GATEWAY_HOST")
+    port = os.environ.get("GATEWAY_PORT")
+
+    if not all([host,port]):
+        raise ValueError("Failed to load gateway's envs")
+
+    return "ws://{}:{}".format(host,port)
+
+
+AUTH_URL = get_auth_service_url()
+GATEWAY_URL = get_gateway_url()
+ENGINE = sqlalchemy.create_engine(get_db_url())

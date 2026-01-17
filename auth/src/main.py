@@ -8,18 +8,13 @@ import time
 from typing import Annotated, Dict
 import os
 from dataclasses import dataclass, asdict
-import connection
 import shared.models as models
+import shared.connection as connection
 
 
 secret = bytes(32)
 app = FastAPI()
 algorithm = "HS256"
-token_store: Dict[int,str] = dict()
-
-
-# Hard coded user id
-user_id: int = 1203129321
 
 
 # Two hours
@@ -56,7 +51,6 @@ def get_token(body: UserLoginDto):
         now = time.time()
         payload = { "iss": found_user_id, "sub": found_username, "iat": now, "exp": now + expiration_time }
         token = jwt.encode(payload,secret,algorithm)
-        token_store[user_id] = token
         return { "token": token }
 
 

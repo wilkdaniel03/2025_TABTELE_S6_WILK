@@ -3,8 +3,8 @@ from fastapi import FastAPI, Header, HTTPException, Request, Response
 from typing import Annotated, Any
 from sqlalchemy import insert, select, delete, text
 from dataclasses import asdict
-import connection
 import shared.models as models
+import shared.connection as connection
 import requests
 import json
 import websockets.sync.client as websockets
