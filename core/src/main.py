@@ -2,7 +2,7 @@ import uvicorn
 from fastapi import FastAPI, Header, HTTPException, Request, Response
 from typing import Annotated, Any
 import sqlalchemy
-from sqlalchemy import insert, select, delete, text
+from sqlalchemy import insert, select, delete
 from dataclasses import asdict
 import shared.models as models
 import shared.connection as connection
@@ -140,7 +140,8 @@ def delete_vehicle(req: Request, vid: int):
 @app.get("/employee")
 def get_employee():
     with ENGINE.connect() as conn:
-        res = conn.execute(text("SELECT user.user_id,person.name,person.surname FROM user JOIN person ON user.user_id = person.user_id JOIN role ON user.user_id = role.user_id WHERE role.name = \"agent\"")).fetchall();
+        sql = select(models.User.user_id,models.Person.name,models.Person.surname).select_from(models.User).join(models.Person,onclause=models.User.user_id == models.Person.user_id).join(models.Role,onclause=models.User.user_id == models.Role.user_id).where(models.Role.name == "agent")
+        res = conn.execute(sql).fetchall();
         if len(res) == 0:
             raise HTTPException(404,"Failed to find any employees")
         employees = [models.EmployeeRec(*x) for x in res]
@@ -163,7 +164,8 @@ def get_reservation():
 
         employees = []
         for i in range(len(reservation_res)):
-            employee_res = conn.execute(text("SELECT person.name,person.surname FROM user JOIN person ON person.user_id = user.user_id WHERE user.user_id = {}".format(reservation_res[i][-2]))).fetchone()
+            sql = select(models.Person.name,models.Person.surname).select_from(models.User).join(models.Person,onclause=models.Person.user_id == models.User.user_id)
+            employee_res = conn.execute(sql).fetchone()
             if employee_res is None:
                 raise HTTPException(404,"Failed to find given employee")
             employees.append("{} {}".format(employee_res[0],employee_res[1]))
