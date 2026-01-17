@@ -4,10 +4,11 @@ interface ITrigger {
 	employee: boolean;
 	vehicle: boolean;
 	reservation: boolean;
+	modal: boolean;
 }
 
 const useTrigger = () => {
-	return useState<ITrigger>({employee:false,vehicle:false,reservation:false});
+	return useState<ITrigger>({employee:false,vehicle:false,reservation:false,modal:false});
 }
 
 type UseTriggerReturnType = ReturnType<typeof useTrigger>;

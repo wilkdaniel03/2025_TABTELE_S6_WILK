@@ -4,6 +4,9 @@ import Table from "./Table";
 import Avatar from "./Avatar";
 import Dropdown from "./Dropdown";
 import DropdownItem from "./DropdownItem";
+import { IFormField, ISelectOption } from "./Form";
+import Form from "./Form";
+import ModalContainer from "./ModalContainer";
 
 export {
 	LoadingButton,
@@ -11,5 +14,9 @@ export {
 	Table,
 	Avatar,
 	Dropdown,
-	DropdownItem
+	DropdownItem,
+	Form,
+	ModalContainer,
+	IFormField,
+	ISelectOption
 }

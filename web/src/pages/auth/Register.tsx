@@ -1,67 +1,32 @@
-import { useState } from "react";
-import { Stack, Input, Button, Select, NativeSelect, Field} from "@chakra-ui/react";
-import { Link } from "react-router-dom";
-import AuthLayout from "@components/auth/AuthLayout";
-export default function Register() {
-    const [sc, setSc] = useState("");
-    const [su, setSu] = useState("");
-    const [sp, setSp] = useState("");
-    const [sp2, setSp2] = useState("");
-    const [se, setSe] = useState("");
+import { Stack } from "@chakra-ui/react";
+import { AuthLayout } from "@components/auth";
+import { Form, IFormField } from "@components";
+import * as Chakra from "@chakra-ui/react"
 
+const FORM_FIELDS: IFormField[] = [
+	{ name: "username", label: "Username", placeholder: "Your username", type: "text" },
+	{ name: "password", label: "Password", placeholder: "Your password", type: "password" },
+	{ name: "confirmPassword", label: "Confirm password", placeholder: "Your password", type: "password" },
+	{ name: "email", label: "Email", placeholder: "Your email", type: "text" },
+	{ name: "country", label: "Country", placeholder:"Select country", type: "select", options: [
+		{ value: "poland", label: "Poland" },
+		{ value: "germany", label: "Germany" },
+		{ value: "usa", label: "United States of America" }
+	] }
+];
+
+const Register = () => {
     return (
         <AuthLayout title="Welcome to fleet system" subtitle="Create new account">
             <Stack>
-                <Field.Root>
-                    <Field.Label fontSize="14px" fontWeight="600" mb={2}>
-                        Username
-                    </Field.Label>
-                    <Input h="44px" placeholder="Your username" value={su} onChange={(e) => setSu(e.target.value)} />
-                </Field.Root>
-
-                <Field.Root>
-                    <Field.Label fontSize="14px" fontWeight="600" mb={2}>
-                        Password
-                    </Field.Label>
-                    <Input h="44px" placeholder="Your password" type="password" value={sp} onChange={(e) => setSp(e.target.value)} />
-                </Field.Root>
-
-                <Field.Root>
-                    <Field.Label fontSize="14px" fontWeight="600" mb={2}>
-                        Confirm password
-                    </Field.Label>
-                    <Input h="44px" placeholder="Your password" type="password" value={sp2} onChange={(e) => setSp2(e.target.value)} />
-                </Field.Root>
-
-                <Field.Root>
-                    <Field.Label fontSize="14px" fontWeight="600" mb={2}>
-                        Email
-                    </Field.Label>
-                    <Input h="44px" placeholder="Your email" value={se} onChange={(e) => setSe(e.target.value)} />
-                </Field.Root>
-
-                <Field.Root>
-                    <Field.Label fontSize="14px" fontWeight="600" mb={2}>
-                        Country
-                    </Field.Label>
-                    <NativeSelect.Root>
-                        <NativeSelect.Field h="44px" placeholder="Select country" value={sc} onChange={(e) => setSc(e.target.value)}>
-                            <option value="Poland">Poland</option>
-                            <option value="Germany">Germany</option>
-                            <option value="USA">USA</option>
-                        </NativeSelect.Field>
-                    </NativeSelect.Root>
-                </Field.Root>
-
-
-                <Button h="48px" bg="#5B5BF7" color="white" _hover={{ bg: "#4B4BEA" }} onClick={() => alert("Sign up TODO")}>
-                    Sign up
-                </Button>
-
-                <Link to="/auth/login" style={{ textAlign: "center", fontSize: "13px", color: "#666" }}>
-                    Already have an account
-                </Link>
+				<Form fields={FORM_FIELDS} onSubmit={(data) => alert("SIGNED UP")} >
+					{(handleSubmit) => <Chakra.Button onClick={handleSubmit} width="100%" fontWeight="semibold" bg="#0B84FF" color="white" _hover={{ bg: "#0A76E6" }}>
+							Create new account
+						</Chakra.Button>}
+				</Form>
             </Stack>
         </AuthLayout>
     );
 }
+
+export default Register;

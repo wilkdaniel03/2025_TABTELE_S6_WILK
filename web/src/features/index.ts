@@ -4,6 +4,7 @@ import EmployeeTable from "./EmployeeTable";
 import ReservationTable from "./ReservationTable";
 import ToastBox from "./ToastBox";
 import ProfileMenu from "./ProfileMenu";
+import ProfileModal from "./ProfileModal";
 
 export {
 	DashboardTabs,
@@ -11,5 +12,6 @@ export {
 	EmployeeTable,
 	ReservationTable,
 	ToastBox,
-	ProfileMenu
+	ProfileMenu,
+	ProfileModal
 }

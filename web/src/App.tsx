@@ -12,15 +12,17 @@ import {
 	EmployeesPage,
     DashboardPage
 } from '@pages/dashboard';
-import { ToastBox } from "@features";
+import { ToastBox, ProfileModal } from "@features";
 import { WebsocketProvider } from "@websocket";
 import { TriggerProvider } from "@trigger";
+import { ModalContainer } from "@components";
 
 function App() {
     return (
         <ChakraProvider value={defaultSystem}>
 			<TriggerProvider>
 				<WebsocketProvider>
+					<ModalContainer><ProfileModal/></ModalContainer>
 					<ToastBox/>
 					<Router>
 						<Routes>
