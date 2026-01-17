@@ -38,6 +38,7 @@ export interface IUserResponse {
 	phone_number: string;
 	pesel: string;
 	nationality: string;
+	[key: string]: string | number;
 }
 
 export interface IReservationResponse {

@@ -1,4 +1,4 @@
-import { useState, HTMLInputTypeAttribute, ReactNode } from "react";
+import { useState, useEffect, HTMLInputTypeAttribute, ReactNode } from "react";
 import * as Chakra from "@chakra-ui/react";
 
 export interface ISelectOption {
@@ -12,6 +12,7 @@ export interface IFormField {
     type: HTMLInputTypeAttribute | "select";
     placeholder?: string;
     options?: ISelectOption[];
+	value?: string | number;
 }
 
 interface IFormProps {
@@ -24,6 +25,19 @@ interface IFormProps {
 
 const Form = ({ fields, onSubmit, errors = {}, children }: IFormProps) => {
     const [formData, setFormData] = useState<Record<string, any>>({});
+	const [trigger,setTrigger] = useState<boolean>(false);
+
+	useEffect(() => {
+		let currentFormData = formData;
+		for(let val of fields) {
+			if(val.value !== undefined)
+				currentFormData[val.name] = `${val.value}`;
+			else
+				currentFormData[val.name] = "";
+		}
+		setFormData(currentFormData);
+		setTrigger(!trigger);
+	},[fields]);
 
     const handleChange = (name: string, value: string) => {
         setFormData((prev) => ({
@@ -65,7 +79,7 @@ const Form = ({ fields, onSubmit, errors = {}, children }: IFormProps) => {
                             type={field.type}
                             placeholder={field.placeholder}
                             onChange={(e) => handleChange(field.name, e.target.value)}
-                            value={formData[field.name] || ""}
+                            value={formData[field.name]}
                         />
                     )}
 
