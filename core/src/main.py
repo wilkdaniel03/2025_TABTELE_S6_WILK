@@ -59,7 +59,8 @@ def get_vehicletype():
 
 @app.post("/vehicletype")
 def post_vehicletype(req: Request, body: models.VehicleTypeDto):
-    role_res = requests.get("{}/role/{}".format(AUTH_URL,req.state.myObject))
+    headers = {"Authorization":"Bearer {}".format(req.state.myObject)}
+    role_res = requests.get("{}/role".format(AUTH_URL),headers=headers)
     if role_res.json()["role"] != "admin":
         raise HTTPException(403,"User have to be admin to access this resource")
     with ENGINE.connect() as conn:
@@ -74,7 +75,8 @@ def post_vehicletype(req: Request, body: models.VehicleTypeDto):
 
 @app.delete("/vehicletype/{vid}")
 def delete_vehicletype(req: Request, vid: int):
-    role_res = requests.get("{}/role/{}".format(AUTH_URL,req.state.myObject))
+    headers = {"Authorization":"Bearer {}".format(req.state.myObject)}
+    role_res = requests.get("{}/role".format(AUTH_URL),headers=headers)
     if role_res.json()["role"] != "admin":
         raise HTTPException(403,"User have to be admin to access this resource")
     with ENGINE.connect() as conn:
