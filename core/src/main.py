@@ -174,5 +174,17 @@ def get_reservation():
         return res
 
 
+@app.get("/user")
+def get_user_by_id(req: Request):
+    user_id = req.state.myObject
+    with ENGINE.connect() as conn:
+        sql = select(models.User.user_id,models.Person.name,models.Person.surname,models.Person.date_of_birth,models.Person.phone_number,models.Person.pesel,models.Person.nationality).select_from(models.User).join(models.Person,onclause = models.User.user_id == models.Person.user_id).where(models.User.user_id == user_id)
+        res = conn.execute(sql).fetchone()
+        if res is None:
+            raise HTTPException(404,"Failed to find user with given id")
+        user = models.UserRec(*res)
+        return user
+
+
 if __name__ == "__main__":
     uvicorn.run("main:app",port=8080,host="0.0.0.0")
