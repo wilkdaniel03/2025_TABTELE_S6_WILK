@@ -35,6 +35,20 @@ class TokenData:
     username: str
 
 
+def check_identity(input: str) -> TokenData:
+    try:
+        token: dict = jwt.decode(input,secret,algorithm)
+    except jwt.exceptions.ExpiredSignatureError:
+        raise HTTPException(401,"Provided token is expired")
+    except:
+        raise HTTPException(400,"Invalid token provided")
+    token_fields = ["iss","sub"]
+    token_has_fields = [k in token.keys() for k in token_fields]
+    if not all(token_has_fields):
+        raise HTTPException(500,"Failed to read token")
+    return TokenData(*(token[k] for k in token_fields))
+
+
 @app.post("/token")
 def get_token(body: UserLoginDto):
     with ENGINE.connect() as conn:
@@ -63,27 +77,23 @@ def get_authorize(authorization: Annotated[str | None, Header()]):
     authorization_parts = authorization.split(" ")
     if authorization_parts[0] != "Bearer":
         raise HTTPException(400,"Invalid token format {}. Should be Bearer".format(authorization_parts[0]))
-    try:
-        token: dict = jwt.decode(authorization_parts[1],secret,algorithm)
-    except jwt.exceptions.ExpiredSignatureError:
-        raise HTTPException(401,"Provided token is expired")
-    except:
-        raise HTTPException(400,"Invalid token provided")
-    token_fields = ["iss","sub"]
-    token_has_fields = [k in token.keys() for k in token_fields]
-    if not all(token_has_fields):
-        raise HTTPException(500,"Failed to read token")
-    token_data = TokenData(*(token[k] for k in token_fields))
-    return asdict(token_data)
+    token = check_identity(authorization_parts[1])
+    return asdict(token)
 
 
-@app.get("/role/{user_id}")
-def get_user_role(user_id: int):
+@app.get("/role")
+def get_user_role(authorization: Annotated[str | None, Header()]):
+    if authorization is None:
+        raise HTTPException(400,"Failed to parse authorize header")
+    authorization_parts = authorization.split(" ")
+    if authorization_parts[0] != "Bearer":
+        raise HTTPException(400,"Invalid token format {}. Should be Bearer".format(authorization_parts[0]))
+    token = check_identity(authorization_parts[1])
     with ENGINE.connect() as conn:
-        sel = select(models.Role.name).where(models.Role.user_id == user_id)
+        sel = select(models.Role.name).where(models.Role.user_id == token.uid)
         res = conn.execute(sel).fetchone()
         if res is None:
-            raise HTTPException(404,"failed to find role for user id {}".format(user_id))
+            raise HTTPException(404,"failed to find role for user id {}".format(token.uid))
         return { "role": res[0] }
 
 
