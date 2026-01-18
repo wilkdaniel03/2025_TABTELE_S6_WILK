@@ -3,7 +3,7 @@ from fastapi import FastAPI, Header, HTTPException, Request, Response
 from typing import Annotated, Any, Dict, Union
 import sqlalchemy
 from sqlalchemy import insert, select, delete, update
-from dataclasses import asdict
+from dataclasses import dataclass, asdict
 import shared.models as models
 import shared.connection as connection
 import requests
@@ -19,6 +19,12 @@ app =  FastAPI()
 
 TOKEN_TYPE_IDX = 0
 TOKEN_VAL_IDX = 1
+
+
+@dataclass
+class SessionStorage:
+    uid: int
+    token: str
 
 
 @app.get("/hello")
@@ -42,7 +48,8 @@ async def token_verification(req: Request, next):
     if not auth_res.ok:
         return Response(status_code=auth_res.status_code,headers=auth_res.headers,content=auth_res.content)
 
-    req.state.myObject = auth_res.json()["uid"]
+    # req.state.myObject = auth_res.json()["uid"]
+    req.state.myObject = SessionStorage(auth_res.json()["uid"],token_header_splitted[TOKEN_VAL_IDX])
     return await next(req)
 
 
@@ -59,7 +66,7 @@ def get_vehicletype():
 
 @app.post("/vehicletype")
 def post_vehicletype(req: Request, body: models.VehicleTypeDto):
-    headers = {"Authorization":"Bearer {}".format(req.state.myObject)}
+    headers = {"Authorization":"Bearer {}".format(req.state.myObject.token)}
     role_res = requests.get("{}/role".format(AUTH_URL),headers=headers)
     if role_res.json()["role"] != "admin":
         raise HTTPException(403,"User have to be admin to access this resource")
@@ -75,7 +82,7 @@ def post_vehicletype(req: Request, body: models.VehicleTypeDto):
 
 @app.delete("/vehicletype/{vid}")
 def delete_vehicletype(req: Request, vid: int):
-    headers = {"Authorization":"Bearer {}".format(req.state.myObject)}
+    headers = {"Authorization":"Bearer {}".format(req.state.myObject.token)}
     role_res = requests.get("{}/role".format(AUTH_URL),headers=headers)
     if role_res.json()["role"] != "admin":
         raise HTTPException(403,"User have to be admin to access this resource")
@@ -113,7 +120,8 @@ def get_vehicle():
 
 @app.post("/vehicle")
 def post_vehicle(req: Request, body: models.VehicleDto):
-    role_res = requests.get("{}/role/{}".format(AUTH_URL,req.state.myObject))
+    headers = {"Authorization":"Bearer {}".format(req.state.myObject.token)}
+    role_res = requests.get("{}/role".format(AUTH_URL),headers=headers)
     if role_res.json()["role"] != "admin":
         raise HTTPException(403,"User have to be admin to access this resource")
     with ENGINE.connect() as conn:
@@ -128,7 +136,8 @@ def post_vehicle(req: Request, body: models.VehicleDto):
 
 @app.delete("/vehicle/{vid}")
 def delete_vehicle(req: Request, vid: int):
-    role_res = requests.get("{}/role/{}".format(AUTH_URL,req.state.myObject))
+    headers = {"Authorization":"Bearer {}".format(req.state.myObject.token)}
+    role_res = requests.get("{}/role".format(AUTH_URL),headers=headers)
     if role_res.json()["role"] != "admin":
         raise HTTPException(403,"User have to be admin to access this resource")
     with ENGINE.connect() as conn:
@@ -178,7 +187,7 @@ def get_reservation():
 
 @app.get("/user")
 def get_user_by_id(req: Request):
-    user_id = req.state.myObject
+    user_id = req.state.myObject.uid
     with ENGINE.connect() as conn:
         sql_fields = (models.User.user_id,models.Person.name,models.Person.surname,models.Person.date_of_birth,models.Person.phone_number,models.Person.pesel,models.Person.nationality)
         sql = select(*sql_fields).select_from(models.User).join(models.Person,onclause = models.User.user_id == models.Person.user_id).where(models.User.user_id == user_id)
@@ -191,7 +200,7 @@ def get_user_by_id(req: Request):
 
 @app.post("/user")
 def update_user_by_id(req: Request, body: Dict[str,Union[str,int]]):
-    user_id = req.state.myObject
+    user_id = req.state.myObject.uid
     for k in body.keys():
         if k not in models.UserRec.__dict__["__dataclass_fields__"].keys():
             raise HTTPException(400,"Cannot use provided {} field".format(k))
