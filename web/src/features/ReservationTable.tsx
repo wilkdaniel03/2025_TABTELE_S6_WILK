@@ -3,12 +3,26 @@ import { useState, useEffect, useContext } from "react";
 import { IReservationResponse} from "@http";
 import { fetchChain, reservationsFields } from "@fetchChain";
 import { TriggerCtx } from "@trigger";
-import { useReservationStore, reservationToString } from "@stores";
+import { useReservationStore, reservationToString, reservationExtractChecked } from "@stores";
 
 const ReservationsTable = () => {
+	const [checkedAll,setCheckedAll] = useState<boolean>(false);
 	const [trigger] = useContext(TriggerCtx)!;
 	const chain = new fetchChain();
-	const { addReservation, reservations } = useReservationStore();
+	const { addReservation, setChecked, reservations } = useReservationStore();
+
+	const handleCheckboxChange = (index:number) => {
+		if(index == -1) {
+			setCheckedAll(!checkedAll);
+			for(let i = 0; i < reservations.length; i++) {
+				if(checkedAll === reservations[i].checked) {
+					setChecked(i);
+				}
+			}
+		}
+		else
+			setChecked(index);
+	}
 
 	useEffect(() => {
 		chain.fetchReservations()
@@ -19,7 +33,7 @@ const ReservationsTable = () => {
 			.catch(err => console.error(err));
 	},[trigger.reservation]);
 
-	return <Table fields={reservationsFields} data={reservations.map((item) => reservationToString(item))} checkable/>;
+	return <Table fields={reservationsFields} data={reservations.map((item) => reservationToString(item))} checkedall={checkedAll} checklist={reservationExtractChecked(reservations)} onCheckboxChange={handleCheckboxChange} checkable/>;
 }
 
 export default ReservationsTable;

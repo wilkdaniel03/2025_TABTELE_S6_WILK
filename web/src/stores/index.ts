@@ -1,9 +1,10 @@
 import { ToastIconType, useToastStore } from "./ToastStore";
-import { useReservationStore, reservationToString } from "./ReservationStore";
+import { useReservationStore, reservationToString, reservationExtractChecked } from "./ReservationStore";
 
 export {
 	ToastIconType,
 	useToastStore,
 	useReservationStore,
-	reservationToString
+	reservationToString,
+	reservationExtractChecked
 }

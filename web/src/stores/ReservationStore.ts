@@ -20,10 +20,15 @@ export const reservationToString = (input: IReservation): string[] => {
 	return current;
 }
 
+export const reservationExtractChecked = (input: IReservation[]): boolean[] => {
+	let current: boolean[] = input.map((item) => item.checked);
+	return current;
+}
+
 interface IReservationStore {
 	reservations: IReservation[];
 	addReservation: (el: IReservationResponse) => void;
-	setChecked: (id: number, checked: boolean) => void;
+	setChecked: (id: number) => void;
 }
 
 export const useReservationStore = create<IReservationStore>((set) => ({
@@ -32,9 +37,8 @@ export const useReservationStore = create<IReservationStore>((set) => ({
 		state.reservations.push({...el,checked:false});
 		return { reservations: state.reservations };
 	}),
-	setChecked: (id,checked) => set((state) => {
-		const target = state.reservations.filter(res => res.id == id)[0];
-		state.reservations[target.id].checked = checked;
+	setChecked: (id) => set((state) => {
+		state.reservations[id].checked = !state.reservations[id].checked;
 		return { reservations: state.reservations };
 	})
 }));
