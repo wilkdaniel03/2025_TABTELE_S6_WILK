@@ -26,6 +26,7 @@ interface IVehicleStore {
 	vehicles: IVehicle[];
 	addVehicle: (el: IVehicleResponse) => void;
 	setChecked: (id: number) => void;
+	clear: () => void;
 }
 
 export const useVehicleStore = create<IVehicleStore>((set) => ({
@@ -37,5 +38,9 @@ export const useVehicleStore = create<IVehicleStore>((set) => ({
 	setChecked: (id) => set((state) => {
 		state.vehicles[id].checked = !state.vehicles[id].checked;
 		return { vehicles: state.vehicles};
+	}),
+	clear: () => set((state) => {
+		state.vehicles.length = 0;
+		return { vehicles: state.vehicles };
 	})
 }));

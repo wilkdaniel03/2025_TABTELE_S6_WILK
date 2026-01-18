@@ -9,7 +9,7 @@ const EmployeeTable = () => {
 	const [checkedAll,setCheckedAll] = useState<boolean>(false);
 	const [trigger] = useContext(TriggerCtx)!;
 	const chain = new fetchChain();
-	const { addEmployee, setChecked, employees } = useEmployeeStore();
+	const { addEmployee, setChecked, employees, clear } = useEmployeeStore();
 
 	const handleCheckboxChange = (index:number) => {
 		if(index == -1) {
@@ -25,6 +25,7 @@ const EmployeeTable = () => {
 	}
 
 	useEffect(() => {
+		clear();
 		chain.fetchEmployees()
 			.then((data: IEmployeeResponse[]) => {
 				for(let val of data)

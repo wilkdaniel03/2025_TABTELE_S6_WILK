@@ -9,7 +9,7 @@ const VehicleTable = () => {
 	const [checkedAll,setCheckedAll] = useState<boolean>(false);
 	const [trigger] = useContext(TriggerCtx)!;
 	const chain = new fetchChain();
-	const { addVehicle, setChecked, vehicles } = useVehicleStore();
+	const { addVehicle, setChecked, vehicles, clear } = useVehicleStore();
 
 	const handleCheckboxChange = (index:number) => {
 		if(index == -1) {
@@ -25,6 +25,7 @@ const VehicleTable = () => {
 	}
 
 	useEffect(() => {
+		clear();
 		chain.fetchVehicles()
 			.then((data: IVehicleResponse[]) => {
 				for(let val of data)

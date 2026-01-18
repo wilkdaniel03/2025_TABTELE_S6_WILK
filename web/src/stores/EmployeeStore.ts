@@ -21,6 +21,7 @@ interface IEmployeeStore {
 	employees: IEmployee[];
 	addEmployee: (el: IEmployeeResponse) => void;
 	setChecked: (id: number) => void;
+	clear: () => void;
 }
 
 export const useEmployeeStore = create<IEmployeeStore>((set) => ({
@@ -32,5 +33,9 @@ export const useEmployeeStore = create<IEmployeeStore>((set) => ({
 	setChecked: (id) => set((state) => {
 		state.employees[id].checked = !state.employees[id].checked;
 		return { employees: state.employees};
+	}),
+	clear: () => set((state) => {
+		state.employees.length = 0;
+		return { employees: state.employees };
 	})
 }));

@@ -9,7 +9,7 @@ const ReservationsTable = () => {
 	const [checkedAll,setCheckedAll] = useState<boolean>(false);
 	const [trigger] = useContext(TriggerCtx)!;
 	const chain = new fetchChain();
-	const { addReservation, setChecked, reservations } = useReservationStore();
+	const { addReservation, setChecked, reservations, clear } = useReservationStore();
 
 	const handleCheckboxChange = (index:number) => {
 		if(index == -1) {
@@ -25,6 +25,7 @@ const ReservationsTable = () => {
 	}
 
 	useEffect(() => {
+		clear();
 		chain.fetchReservations()
 			.then((data: IReservationResponse[]) => {
 				for(let v of data)

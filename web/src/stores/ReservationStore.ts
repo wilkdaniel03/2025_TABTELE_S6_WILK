@@ -29,6 +29,7 @@ interface IReservationStore {
 	reservations: IReservation[];
 	addReservation: (el: IReservationResponse) => void;
 	setChecked: (id: number) => void;
+	clear: () => void;
 }
 
 export const useReservationStore = create<IReservationStore>((set) => ({
@@ -39,6 +40,10 @@ export const useReservationStore = create<IReservationStore>((set) => ({
 	}),
 	setChecked: (id) => set((state) => {
 		state.reservations[id].checked = !state.reservations[id].checked;
+		return { reservations: state.reservations };
+	}),
+	clear: () => set((state) => {
+		state.reservations.length = 0;
 		return { reservations: state.reservations };
 	})
 }));
