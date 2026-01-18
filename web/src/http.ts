@@ -51,7 +51,7 @@ export interface IUserRequest {
 }
 
 export interface IReservationResponse {
-	id: number;
+	res_id: number;
 	trip_type: string;
 	status: string;
 	start_mileage: number;

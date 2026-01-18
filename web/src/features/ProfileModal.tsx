@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import * as Chakra from "@chakra-ui/react";
-import { Form, IFormField } from "@components";
+import { Form, IFormField, ISelectOption } from "@components";
 import { fetchChain } from "@fetchChain";
 import { IUserRequest, IUserResponse } from "@http";
 import { useToastStore, ToastIconType } from "@stores";
+import Country from "@assets/country.json";
+
+const options: ISelectOption[] = Country.map(item => ({ label: item.label, value: item.label.toLowerCase() }));
 
 const ProfileModal = () => {
 	const fetch = new fetchChain();
@@ -13,11 +16,7 @@ const ProfileModal = () => {
 		{ name: "date_of_birth", label: "Date of Birth", type: "text" },
 		{ name: "phone_number", label: "Phone number", type: "text" },
 		{ name: "pesel", label: "Pesel", type: "text" },
-		{ name: "nationality", label: "Nationality", type: "select", options: [
-			{ label: "Germany", value: "germany" },
-			{ label: "Poland", value: "poland" },
-			{ label: "United states", value: "usa" }
-		] }
+		{ name: "nationality", label: "Nationality", type: "select", options: options }
 	]);
 
 	const { append } = useToastStore();

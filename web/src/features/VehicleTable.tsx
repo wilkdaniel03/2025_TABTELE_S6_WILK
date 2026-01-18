@@ -3,33 +3,38 @@ import { useState, useEffect, useContext } from "react";
 import { IVehicleResponse } from "@http";
 import { fetchChain, vehiclesFields } from "@fetchChain";
 import { TriggerCtx } from "@trigger";
+import { useVehicleStore, vehicleToString, vehicleExtractChecked } from "@stores";
 
 const VehicleTable = () => {
-	const [vehicles,setVehicles] = useState<string[][]>([]);
+	const [checkedAll,setCheckedAll] = useState<boolean>(false);
 	const [trigger] = useContext(TriggerCtx)!;
 	const chain = new fetchChain();
+	const { addVehicle, setChecked, vehicles, clear } = useVehicleStore();
+
+	const handleCheckboxChange = (index:number) => {
+		if(index == -1) {
+			setCheckedAll(!checkedAll);
+			for(let i = 0; i < vehicles.length; i++) {
+				if(checkedAll === vehicles[i].checked) {
+					setChecked(i);
+				}
+			}
+		}
+		else
+			setChecked(index);
+	}
 
 	useEffect(() => {
+		clear();
 		chain.fetchVehicles()
 			.then((data: IVehicleResponse[]) => {
-				let newVehicles = [];
-				for(let val of data) {
-					let current = [];
-					current.push(`${val.type.brand}`);
-					current.push(`${val.type.model}`);
-					current.push(`${val.vin}`);
-					current.push(`${val.registration_number}`);
-					current.push(`${val.production_year}`);
-					current.push(`${val.current_mileage}`);
-					current.push(`${val.status}`);
-					newVehicles.push(current);
-				}
-				setVehicles(newVehicles);
+				for(let val of data)
+					addVehicle(val);
 			})
 			.catch(err => console.error(err));
 	},[trigger.vehicle]);
 
-	return <Table fields={vehiclesFields} data={vehicles}/>;
+	return <Table fields={vehiclesFields} data={vehicles.map((item) => vehicleToString(item))} checkedall={checkedAll} checklist={vehicleExtractChecked(vehicles)} onCheckboxChange={handleCheckboxChange} checkable/>;
 }
 
 export default VehicleTable;

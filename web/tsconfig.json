@@ -12,6 +12,7 @@
 		"rootDir": "./src",
 		"outDir": "./dist",
 		"lib": [ "DOM", "ESNext" ],
+		"resolveJsonModule": true,
 		"paths": {
 			"@pages/*": ["./pages/*"],
 			"@components/*": ["./components/*"],
