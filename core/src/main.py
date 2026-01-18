@@ -166,7 +166,7 @@ def get_reservation():
 
         employees = []
         for i in range(len(reservation_res)):
-            sql = select(models.Person.name,models.Person.surname).select_from(models.User).join(models.Person,onclause=models.Person.user_id == models.User.user_id)
+            sql = select(models.Person.name,models.Person.surname).select_from(models.User).join(models.Person,onclause=models.Person.user_id == models.User.user_id).where(models.User.user_id == reservation_res[i][-2])
             employee_res = conn.execute(sql).fetchone()
             if employee_res is None:
                 raise HTTPException(404,"Failed to find given employee")
