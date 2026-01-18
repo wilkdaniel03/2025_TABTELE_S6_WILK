@@ -66,4 +66,16 @@ export class fetchChain {
 
 		return { status: res.status, data: await res.json() };
 	}
+
+	public async deleteVehicle(id: number) : Promise<any> {
+		const res = await fetch(`${this.url}/vehicle/${id}`,{
+			method: "DELETE",
+			headers: {
+				"Authorization": `Bearer ${localStorage.getItem("token")}`,
+				"Content-Type": "application/json"
+			}
+		});
+
+		return  await res.json();
+	}
 }

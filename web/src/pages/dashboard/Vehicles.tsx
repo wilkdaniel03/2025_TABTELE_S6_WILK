@@ -1,13 +1,17 @@
 import * as Chakra from "@chakra-ui/react";
 import { VehicleTable } from "@features";
 import { useVehicleStore } from "@stores";
+import { fetchChain } from "@fetchChain";
 
 const VehiclesPage = () => {
 	const { vehicles } = useVehicleStore();
+	const fetch = new fetchChain();
 
 	const handleDelete = () => {
 		const ids = vehicles.filter((item) => item.checked).map((item) => item.id);
-		console.log(ids);
+		for(let v of ids) {
+			fetch.deleteVehicle(v).then();
+		}
 	}
 
     return (
