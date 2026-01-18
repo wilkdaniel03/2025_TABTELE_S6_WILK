@@ -32,7 +32,7 @@ const ReservationsTable = () => {
 			.catch(err => console.error(err));
 	},[trigger.reservation]);
 
-	return <Table fields={reservationsFields} data={reservations}/>;
+	return <Table fields={reservationsFields} data={reservations} checkable/>;
 }
 
 export default ReservationsTable;
