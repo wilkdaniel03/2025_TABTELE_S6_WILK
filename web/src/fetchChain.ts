@@ -78,4 +78,28 @@ export class fetchChain {
 
 		return  await res.json();
 	}
+
+	public async deleteEmployee(id: number) : Promise<any> {
+		const res = await fetch(`${this.url}/employee/${id}`,{
+			method: "DELETE",
+			headers: {
+				"Authorization": `Bearer ${localStorage.getItem("token")}`,
+				"Content-Type": "application/json"
+			}
+		});
+
+		return  await res.json();
+	}
+
+	public async deleteReservation(id: number) : Promise<any> {
+		const res = await fetch(`${this.url}/reservation/${id}`,{
+			method: "DELETE",
+			headers: {
+				"Authorization": `Bearer ${localStorage.getItem("token")}`,
+				"Content-Type": "application/json"
+			}
+		});
+
+		return  await res.json();
+	}
 }
