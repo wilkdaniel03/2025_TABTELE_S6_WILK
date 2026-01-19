@@ -176,6 +176,21 @@ def get_reservation():
         return res
 
 
+@app.delete("/reservation/{res_id}")
+def delete_reservation(req: Request, res_id: int):
+    role_res = requests.get("{}/role/{}".format(AUTH_URL,req.state.myObject))
+    if role_res.json()["role"] != "admin":
+        raise HTTPException(403,"User have to be admin to access this resource")
+
+    with ENGINE.connect() as conn:
+        sql = delete(models.Reservation).where(models.Reservation.res_id == res_id)
+        conn.execute(sql)
+        conn.commit()
+        with websockets.connect("{}/internal".format(GATEWAY_URL)) as conn:
+            conn.send("delete,reservation")
+        return {"status":200}
+
+
 @app.get("/user")
 def get_user_by_id(req: Request):
     user_id = req.state.myObject
