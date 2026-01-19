@@ -159,6 +159,22 @@ def get_employee():
         return employees
 
 
+@app.delete("/employee/{emp_id}")
+def delete_employeee(req: Request, emp_id: int):
+    headers = {"Authorization":"Bearer {}".format(req.state.myObject.token)}
+    role_res = requests.get("{}/role".format(AUTH_URL),headers=headers)
+    if role_res.json()["role"] != "admin":
+        raise HTTPException(403,"User have to be admin to access this resource")
+
+    with ENGINE.connect() as conn:
+        sql = delete(models.User).where(models.User.user_id == emp_id)
+        conn.execute(sql)
+        conn.commit()
+        with websockets.connect("{}/internal".format(GATEWAY_URL)) as conn:
+            conn.send("delete,employee")
+        return {"status":200}
+
+
 @app.get("/reservation")
 def get_reservation():
     with ENGINE.connect() as conn:
@@ -183,6 +199,22 @@ def get_reservation():
 
         res = [models.ReservationRec(*reservation_res[i][:-2],employees[i],vehicles[i]) for i in range(len(reservation_res))]
         return res
+
+
+@app.delete("/reservation/{res_id}")
+def delete_reservation(req: Request, res_id: int):
+    headers = {"Authorization":"Bearer {}".format(req.state.myObject.token)}
+    role_res = requests.get("{}/role".format(AUTH_URL),headers=headers)
+    if role_res.json()["role"] != "admin":
+        raise HTTPException(403,"User have to be admin to access this resource")
+
+    with ENGINE.connect() as conn:
+        sql = delete(models.Reservation).where(models.Reservation.res_id == res_id)
+        conn.execute(sql)
+        conn.commit()
+        with websockets.connect("{}/internal".format(GATEWAY_URL)) as conn:
+            conn.send("delete,reservation")
+        return {"status":200}
 
 
 @app.get("/user")
