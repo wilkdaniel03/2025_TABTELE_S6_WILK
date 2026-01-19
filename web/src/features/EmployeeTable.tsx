@@ -1,15 +1,16 @@
 import { Table } from "@components";
 import { useState, useEffect, useContext } from "react";
-import { IVehicleResponse, IEmployeeResponse } from "@http";
+import { IVehicleResponse, IEmployeeResponse, UserRole } from "@http";
 import { fetchChain, employeesFields } from "@fetchChain";
 import { TriggerCtx } from "@trigger";
-import { useEmployeeStore, employeeToString, employeeExtractChecked } from "@stores";
+import { useEmployeeStore, employeeToString, employeeExtractChecked, useUserInfoStore } from "@stores";
 
 const EmployeeTable = () => {
 	const [checkedAll,setCheckedAll] = useState<boolean>(false);
 	const [trigger] = useContext(TriggerCtx)!;
 	const chain = new fetchChain();
 	const { addEmployee, setChecked, employees, clear } = useEmployeeStore();
+	const { role } = useUserInfoStore();
 
 	const handleCheckboxChange = (index:number) => {
 		if(index == -1) {
@@ -34,7 +35,7 @@ const EmployeeTable = () => {
 			.catch(err => console.error(err));
 	},[trigger.employee]);
 
-	return <Table fields={employeesFields} data={employees.map((item) => employeeToString(item))} checkedall={checkedAll} checklist={employeeExtractChecked(employees)} onCheckboxChange={handleCheckboxChange} checkable/>;
+	return <Table fields={employeesFields} data={employees.map((item) => employeeToString(item))} checkedall={checkedAll} checklist={employeeExtractChecked(employees)} onCheckboxChange={handleCheckboxChange} checkable={role === UserRole.ADMIN}/>;
 }
 
 export default EmployeeTable;

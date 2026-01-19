@@ -1,15 +1,16 @@
 import { Table } from "@components";
 import { useState, useEffect, useContext } from "react";
-import { IReservationResponse} from "@http";
+import { IReservationResponse, UserRole } from "@http";
 import { fetchChain, reservationsFields } from "@fetchChain";
 import { TriggerCtx } from "@trigger";
-import { useReservationStore, reservationToString, reservationExtractChecked } from "@stores";
+import { useReservationStore, reservationToString, reservationExtractChecked, useUserInfoStore } from "@stores";
 
 const ReservationsTable = () => {
 	const [checkedAll,setCheckedAll] = useState<boolean>(false);
 	const [trigger] = useContext(TriggerCtx)!;
 	const chain = new fetchChain();
 	const { addReservation, setChecked, reservations, clear } = useReservationStore();
+	const { role } = useUserInfoStore();
 
 	const handleCheckboxChange = (index:number) => {
 		if(index == -1) {
@@ -34,7 +35,7 @@ const ReservationsTable = () => {
 			.catch(err => console.error(err));
 	},[trigger.reservation]);
 
-	return <Table fields={reservationsFields} data={reservations.map((item) => reservationToString(item))} checkedall={checkedAll} checklist={reservationExtractChecked(reservations)} onCheckboxChange={handleCheckboxChange} checkable/>;
+	return <Table fields={reservationsFields} data={reservations.map((item) => reservationToString(item))} checkedall={checkedAll} checklist={reservationExtractChecked(reservations)} onCheckboxChange={handleCheckboxChange} checkable={role === UserRole.ADMIN}/>;
 }
 
 export default ReservationsTable;
