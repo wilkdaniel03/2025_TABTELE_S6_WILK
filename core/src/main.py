@@ -150,6 +150,21 @@ def get_employee():
         return employees
 
 
+@app.delete("/employee/{emp_id}")
+def delete_employeee(req: Request, emp_id: int):
+    role_res = requests.get("{}/role/{}".format(AUTH_URL,req.state.myObject))
+    if role_res.json()["role"] != "admin":
+        raise HTTPException(403,"User have to be admin to access this resource")
+
+    with ENGINE.connect() as conn:
+        sql = delete(models.User).where(models.User.user_id == emp_id)
+        conn.execute(sql)
+        conn.commit()
+        with websockets.connect("{}/internal".format(GATEWAY_URL)) as conn:
+            conn.send("delete,employee")
+        return {"status":200}
+
+
 @app.get("/reservation")
 def get_reservation():
     with ENGINE.connect() as conn:
