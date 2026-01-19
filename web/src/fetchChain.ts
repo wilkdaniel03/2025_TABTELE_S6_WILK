@@ -5,6 +5,7 @@ export const employeesFields: string[] = ["name","surname"];
 export const reservationsFields: string[] = ["trip_type","status","start_mileage","end_mileage","comments","reservation_date","planned_departure","planned_arrival","employee_name","vehicle_name"];
 
 export class fetchChain {
+	private auth_url = "http://bd.wilkdaniel.com:8081";
 	private url = "http://bd.wilkdaniel.com:8082";
 
 	public async fetchVehicles() : Promise<any> {
@@ -32,6 +33,18 @@ export class fetchChain {
 
 	public async fetchReservations() : Promise<any> {
 		const res = await fetch(`${this.url}/reservation`,{
+			method: "GET",
+			headers: {
+				"Authorization": `Bearer ${localStorage.getItem("token")}`,
+				"Content-Type": "application/json"
+			}
+		});
+
+		return await res.json();
+	}
+
+	public async fetchRole() : Promise<any> {
+		const res = await fetch(`${this.auth_url}/role`,{
 			method: "GET",
 			headers: {
 				"Authorization": `Bearer ${localStorage.getItem("token")}`,

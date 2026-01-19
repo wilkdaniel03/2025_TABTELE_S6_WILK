@@ -2,6 +2,7 @@ import { ToastIconType, useToastStore } from "./ToastStore";
 import { useReservationStore, reservationToString, reservationExtractChecked } from "./ReservationStore";
 import { useVehicleStore, vehicleToString, vehicleExtractChecked } from "./VehicleStore";
 import { useEmployeeStore, employeeToString, employeeExtractChecked } from "./EmployeeStore";
+import { useUserInfoStore } from "./UserInfoStore";
 
 export {
 	ToastIconType,
@@ -14,5 +15,6 @@ export {
 	vehicleExtractChecked,
 	useEmployeeStore,
 	employeeToString,
-	employeeExtractChecked
+	employeeExtractChecked,
+	useUserInfoStore
 }

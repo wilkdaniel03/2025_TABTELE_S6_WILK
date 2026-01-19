@@ -8,7 +8,7 @@ interface IUserInfoStore {
 	setRole: (role: IRoleResponse) => void;
 }
 
-const useUserInfoStore = create<IUserInfoStore>((set) => ({
+export const useUserInfoStore = create<IUserInfoStore>((set) => ({
 	info: {id:0,name:"",surname:"",phone_number:"",pesel:"",date_of_birth:"",nationality:""},
 	role: UserRole.CUSTOMER,
 	setInfo: (data) => set((state) => {
