@@ -1,13 +1,17 @@
 import * as Chakra from "@chakra-ui/react";
 import { EmployeeTable } from "@features";
 import { useEmployeeStore } from "@stores";
+import { fetchChain } from "@fetchChain";
 
 const EmployeesPage = () => {
 	const { employees } = useEmployeeStore();
+	const fetch = new fetchChain();
 
 	const handleDelete = () => {
 		const ids = employees.filter((item) => item.checked).map((item) => item.id);
-		console.log(ids);
+		for(let v of ids) {
+			fetch.deleteEmployee(v).then();
+		}
 	}
 
     return (

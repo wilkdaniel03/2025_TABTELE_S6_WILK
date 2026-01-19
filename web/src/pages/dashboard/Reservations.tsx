@@ -1,12 +1,17 @@
 import * as Chakra from "@chakra-ui/react";
 import { ReservationTable } from "@features";
 import { useReservationStore } from "@stores";
+import { fetchChain } from "@fetchChain";
 
 const ReservationsPage = () => {
 	const { reservations } = useReservationStore();
+	const fetch = new fetchChain();
 
 	const handleDelete = () => {
 		const ids = reservations.filter((item) => item.checked).map((item) => item.res_id);
+		for(let v of ids) {
+			fetch.deleteReservation(v).then();
+		}
 	}
 	
     return (
