@@ -50,6 +50,16 @@ export interface IUserRequest {
 	nationality?: string;
 }
 
+export enum UserRole {
+	CUSTOMER = "customer",
+	AGENT = "agent",
+	ADMIN = "admin"
+}
+
+export interface IRoleResponse {
+	role: string;
+}
+
 export interface IReservationResponse {
 	res_id: number;
 	trip_type: string;
